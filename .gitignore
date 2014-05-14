@@ -1,0 +1,10 @@
+Debug
+Release
+*.exe
+*.user
+*.suo
+*.sdf
+*.opensdf
+/bin
+/ipch
+/*.aps
