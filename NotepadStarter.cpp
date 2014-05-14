@@ -264,8 +264,11 @@ bool QueryRegistryString(HKEY hKey, std::wstring key, std::wstring &value) {
 
 wstring FullPath(wstring const &inPath) {
 	std::vector<wchar_t> p;
-	p.resize(8192);
-	return _wfullpath(p.data(), inPath.c_str(), p.size());
+	p.resize(32768);
+	DWORD len = GetLongPathNameW(inPath.c_str(), p.data(), p.size());
+	wstring newStr(p.begin(), p.begin() + len);
+	len = GetFullPathNameW(newStr.c_str(), p.size(), p.data(), NULL);
+	return wstring(p.begin(), p.begin() + len);
 }
 
 wstring GetModuleExecutable(HANDLE process, HMODULE module) {
