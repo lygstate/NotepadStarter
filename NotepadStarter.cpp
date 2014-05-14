@@ -58,11 +58,40 @@
 #define MAX_TITLE_LEN 100
 
 static CSystemTray _TrayIcon;
-bool bDebug = 0;
+bool bDebug = false;
 static std::wstring filename;
 #ifndef length_of
 #define length_of(x) (sizeof(x)/sizeof((x)[0]))
 #endif
+
+HANDLE g_hMonitorProcess = NULL;
+HANDLE m_hRegisterWait;
+VOID CALLBACK WaitOrTimerCallback(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
+{
+	if( FALSE == TimerOrWaitFired )
+	{
+		UnregisterWait(m_hRegisterWait);
+		CloseHandle(g_hMonitorProcess);
+		ExitProcess(0);
+	}
+}
+
+void MonitorPid(DWORD pid) {
+	g_hMonitorProcess = OpenProcess(SYNCHRONIZE, FALSE, pid);
+
+	if (g_hMonitorProcess != NULL
+		&& FALSE == RegisterWaitForSingleObject(
+		&m_hRegisterWait,
+		g_hMonitorProcess,
+		WaitOrTimerCallback,
+		0,
+		INFINITE,
+		WT_EXECUTEONLYONCE))
+	{
+		CloseHandle(g_hMonitorProcess);
+		g_hMonitorProcess = NULL;
+	}
+}
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -73,27 +102,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_COPYDATA:
 		if (lParam){
 			COPYDATASTRUCT * pcds = (COPYDATASTRUCT *)lParam;
-			if (pcds->dwData == NS_ID_PROG_CLOSED) {
-				LPCWSTR lpszString = (LPCWSTR)(pcds->lpData);
-				DBGW1("WndProc: got message NS_ID_PROG_CLOSED: %s", lpszString);
-				PostQuitMessage(0);
-			}
-			if (pcds->dwData == NS_ID_FILE_CLOSED) {
-				LPCWSTR lpszString = (LPCWSTR)(pcds->lpData);
-				DBGW1("WndProc: got message NS_ID_FILE_CLOSED: %s", lpszString);
-				if (filename == lpszString) { // TOOD: use more robust filename compare function
-					PostQuitMessage(0);
+			LPCWSTR lpszString = (LPCWSTR)(pcds->lpData);
+			switch (pcds->dwData) {
+			default:break;
+			case NS_ID_FILE_OPEN: {
+				DBGW1("WndProc: got message NS_ID_FILE_OPEN: %s", lpszString);
+				if (filename == lpszString && g_hMonitorProcess == NULL) { //TODO: more robust filename compare
+					MonitorPid((DWORD)wParam);
 				}
-				else {
+				break;
+			}
+			case NS_ID_FILE_CLOSED: {
+				DBGW1("WndProc: got message NS_ID_FILE_CLOSED: %s", lpszString);
+				if (filename == lpszString) {
+					ExitProcess(0);
+				} else {
 					if (bDebug) {
 						std::wstring msg = filename + L"!=" + lpszString;
 						MessageBox(NULL, msg.c_str(), NS_APP_TITLE L" Not mine...", MB_OK);
 					}
 				}
+				break;
 			}
-		}
-		else  {
+			case NS_ID_PROG_CLOSED: {
+				DBGW1("WndProc: got message NS_ID_PROG_CLOSED: %s", lpszString);
+				break;
+			}
+			}
+		} else {
 			DBG1("WndProc: got message WM_COPYDATA 0x%x", lParam);
+			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
 		break;
 	case WM_ICON_NOTIFY:
@@ -117,12 +155,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
 		break;
-
-	case NS_ID_PROG_CLOSED:
-		DBG1("WndProc: got message NS_ID_FILE_CLOSED %x", lParam);
-		// close my self and inform the others
-		//NOTE: not need to exit in NS_ID_PROG_CLOSED at the current time: PostQuitMessage(0);
-		return DefWindowProc(hWnd, message, wParam, lParam);
 
 	case WM_DESTROY:
 		PostQuitMessage(0);
@@ -311,7 +343,7 @@ bool ReadOptions(std::wstring& notepadCmd, bool& bWaitForNotepadClose, /*DWORD& 
 {
 	notepadCmd = QueryNotepadCommand(); // The commands path is relative to this executable, test if the executable exist, if doesn't ,then return false
 	bWaitForNotepadClose = true; // Flag for waiting or note waiting for notepad++ to exit. "yes" | "no"
-	bDebug = false; // default not to debug "yes" | "no"
+	//bDebug = false; // default not to debug "yes" | "no"
 
 	return true;
 }

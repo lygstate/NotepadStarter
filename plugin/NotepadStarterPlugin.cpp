@@ -150,6 +150,20 @@ BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam)
 	return TRUE;
 }
 
+void reportMessage(std::wstring const &savedPath, ULONG ns_id) {
+	COPYDATASTRUCT cpst;
+	cpst.dwData = ns_id;
+	cpst.cbData = (savedPath.size() + 1) * sizeof(wchar_t);
+	cpst.lpData = (PVOID)savedPath.c_str();
+	DBGW1("beNotified() sending closed message for %s", savedPath.c_str());
+	//DBG1("beNotified() sending closed message for %s", s.c_str());
+	EnumMessage msg;
+	msg.msgID = WM_COPYDATA;
+	msg.wparam = (WPARAM)GetCurrentProcessId();
+	msg.lparam = (LPARAM)&cpst;
+	EnumWindows((WNDENUMPROC)EnumWindowsProc, (LPARAM)&msg);
+}
+
 std::wstring getCurrentFilename(uptr_t bufferId) {
 	int len = (int)execute(nppHandle, NPPM_GETFULLPATHFROMBUFFERID, bufferId);
 	if (len <= 0) {
@@ -166,20 +180,6 @@ std::wstring getCurrentFilename(uptr_t bufferId) {
 	return std::move(str);
 }
 
-void reportMessage(std::wstring const &savedPath) {
-	COPYDATASTRUCT cpst;
-	cpst.dwData = NS_ID_FILE_CLOSED;
-	cpst.cbData = savedPath.size() * sizeof(wchar_t);
-	cpst.lpData = (PVOID)savedPath.c_str();
-	DBGW1("beNotified() sending closed message for %s", savedPath.c_str());
-	//DBG1("beNotified() sending closed message for %s", s.c_str());
-	EnumMessage msg;
-	msg.msgID = WM_COPYDATA;
-	msg.wparam = (WPARAM)_nppData._nppHandle;
-	msg.lparam = (LPARAM)&cpst;
-	EnumWindows((WNDENUMPROC)EnumWindowsProc, (LPARAM)&msg);
-}
-
 std::wstring savedPath;
 
 extern "C" __declspec(dllexport) void beNotified(SCNotification *notification)
@@ -188,6 +188,14 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notification)
 
 	switch (notification->nmhdr.code)
 	{
+	case NPPN_FILEBEFOREOPEN: {
+		uptr_t OpenId = notification->nmhdr.idFrom;
+		DBGW2("beNotified() NPPN_FILEBEFORESAVE hwndNpp = %d SaveId = %d",
+			notification->nmhdr.hwndFrom, OpenId);
+		savedPath = getCurrentFilename(OpenId);
+		reportMessage(savedPath, NS_ID_FILE_OPEN);
+		break;
+	}
 	case NPPN_FILEBEFORESAVE: {
 		uptr_t SaveId = notification->nmhdr.idFrom;
 		DBGW2("beNotified() NPPN_FILEBEFORESAVE hwndNpp = %d SaveId = %d",
@@ -207,8 +215,10 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notification)
 	}
 	case NPPN_FILESAVED: {
 		std::wstring currentPath = getCurrentFilename(notification->nmhdr.idFrom);
-		if (currentPath != savedPath) { // It's save as
-			reportMessage(savedPath);
+
+		// If the current path is different to the saved path, a rename action is undergo.
+		if (currentPath != savedPath) {
+			reportMessage(savedPath, NS_ID_FILE_CLOSED);
 		}
 		break;
 	}
@@ -218,7 +228,7 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notification)
 			int pos = (int)execute(nppHandle, NPPM_GETPOSFROMBUFFERID, CloseId);
 			DBG2("beNotified() NPPN_FILECLOSED CloseId = %d pos %d ", CloseId, pos);
 			if (pos == -1) {
-				reportMessage(savedPath);
+				reportMessage(savedPath, NS_ID_FILE_CLOSED);
 			}
 		}
 		CloseId = 0;
@@ -226,11 +236,7 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notification)
 	}
 	case NPPN_SHUTDOWN:
 	{
-		EnumMessage msg;
-		msg.msgID = NS_ID_PROG_CLOSED;
-		msg.wparam = 0;
-		msg.lparam = 0;
-		EnumWindows((WNDENUMPROC)EnumWindowsProc, (LPARAM)&msg);
+		reportMessage(L"", NS_ID_PROG_CLOSED);
 		break;
 	}
 
