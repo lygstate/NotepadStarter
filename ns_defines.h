@@ -23,8 +23,9 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #define NS_VER_NAME TEXT("Version ")
 #define NS_APP_TITLE TEXT("NotepadStarter")
 #define NS_SPACE TEXT(" ")
-#define NS_ID_FILE_CLOSED 103401
-#define NS_ID_PROG_CLOSED 103402
+#define NS_ID_FILE_OPEN   103500
+#define NS_ID_FILE_CLOSED 103501
+#define NS_ID_PROG_CLOSED 103502
 #define NS_HEADLINE NS_APP_TITLE NS_SPACE NS_VERSION
 #define NS_VERSION_INFO NS_VER_NAME NS_VERSION
 #define NS_SPC TEXT(" ")

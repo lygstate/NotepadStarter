@@ -346,7 +346,7 @@ std::wstring GetFilenameParameter(wstring const& arguments) {
 	std::wstring filename = L"";
 
 	size_t i = 0;
-	while (i <arguments.size()) {
+	while (i < arguments.size()) {
 		if (iswspace(arguments[i])) {
 			++i;
 			continue;
@@ -392,7 +392,7 @@ std::wstring GetFilenameParameter(wstring const& arguments) {
 			}
 		}
 
-		if (idx == std::wstring::npos ) {
+		if (idx == std::wstring::npos) {
 			break;
 		}
 		i = j;
