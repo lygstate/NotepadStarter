@@ -1,29 +1,25 @@
 @echo off
+set PARAMS=%2 %3 %4 %5 %6 %7 %8 %9 %SHIFT%
 
 :: BatchGotAdmin
 :-------------------------------------
-REM  --> Check for permissions
->nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
-
-REM --> If error flag set, we do not have admin.
-if '%errorlevel%' NEQ '0' (
-    echo Requesting administrative privileges...
-    goto UACPrompt
-) else ( goto gotAdmin )
+:: --> Check for permissions
+net session >nul 2>&1
+:: --> If error flag not set, we do have administrator permission.
+if %errorLevel% == 0 (
+    goto gotAdmin
+)
 
 :UACPrompt
-    echo Set UAC = CreateObject^("Shell.Application"^) > "%temp%\getadmin.vbs"
-    echo UAC.ShellExecute "cmd.exe", "/c %1 %params%", "", "runas", 1 >> "%temp%\getadmin.vbs"
-    "%temp%\getadmin.vbs" & exit
+    echo Requesting administrative privileges...
+    echo Set oShell = CreateObject^("WScript.Shell"^) > "%temp%\getadmin.vbs"
+    echo param = oShell.ExpandEnvironmentStrings^("%%PARAMS%%"^) >> "%temp%\getadmin.vbs"
+    echo Const Q="""" >> "%temp%\getadmin.vbs"
+    echo param = "/c " ^& Q^& Q^&"%~1"^&Q ^& " " ^& param ^&Q >> "%temp%\getadmin.vbs"
+    ::echo WScript.Echo param >> "%temp%\getadmin.vbs"
+    echo Set UAC = CreateObject^("Shell.Application"^) >> "%temp%\getadmin.vbs"
+    echo UAC.ShellExecute "cmd", param, "", "runas", 1 >> "%temp%\getadmin.vbs"
+    call "%temp%\getadmin.vbs" & del "%temp%\getadmin.vbs" & exit /B
 
 :gotAdmin
-    pushd "%CD%"
-    CD /D "%~dp0"
-:--------------------------------------
-
-del "%temp%\getadmin.vbs"
-::echo on
-::echo %0
-::echo %1
-::pause
-call %1
+    echo Directly running with administrative privileges...
