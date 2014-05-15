@@ -1,4 +1,4 @@
-::通过使用短文件路径，支持放在Unicode路径下。
+﻿::通过使用短文件路径，支持放在Unicode路径下。
 @echo off
 cd /d %~dps0
 set WD=%CD%
@@ -46,4 +46,4 @@ reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Executi
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f /v "Notepad++" /t REG_SZ /d "%WD%"
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f /v "readme" /t REG_SZ /d "call NotepadStarter.exe instead of original notepad.exe! To disable this option just remove notepad.exe entry"
 
-pause
+::pause

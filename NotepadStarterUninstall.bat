@@ -42,4 +42,4 @@ goto %NEXT%
 
 :end
 
-pause
+::pause
