@@ -412,7 +412,7 @@ std::wstring GetFilenameParameter(wstring const& arguments) {
 		}
 		size_t idx = std::wstring::npos;
 		for (int k = 0; k < length_of(notepadNames); ++k) {
-			idx = upperApp.find(notepadNames[k]);
+			idx = upperApp.rfind(notepadNames[k]);
 			if (idx != std::wstring::npos) {
 				std::wstring notepad = notepadNames[k];
 				idx += notepad.size();
@@ -456,13 +456,13 @@ std::wstring GetFilenameParameter(wstring const& arguments) {
 bool CreateCommandLine(std::wstring& cmd, std::wstring& filename, boolean const& bDebug, wstring const& arguments)
 {
 	std::wstring upperApp;
-
+	std::wstring  fullCommandLine = GetCommandLineW();
 	if (bDebug) {
-		if (IDCANCEL == MessageBoxW(NULL, arguments.c_str(), L"NotepadStarter initial command line", MB_OKCANCEL))
+		if (IDCANCEL == MessageBoxW(NULL, fullCommandLine.c_str(), L"NotepadStarter initial command line", MB_OKCANCEL))
 			return false;
 	}
 
-	filename = GetFilenameParameter(GetCommandLineW());
+	filename = GetFilenameParameter(fullCommandLine);
 
 	if (filename.size() > 0) {
 		cmd = cmd + L" \"" + filename + L"\"";
@@ -541,6 +541,10 @@ BOOL IsProcessRunning(HANDLE hProcess)
 	return ret == WAIT_TIMEOUT;
 }
 
+void testCommandLineParse() {
+	std::wstring name = GetFilenameParameter(L"D:\\CI-Tools\\IDE\\npp\\NotepadStarter.exe notepad test.txt");
+}
+
 // main 
 int WINAPI wWinMain(
 	HINSTANCE hThisInstance,
@@ -552,7 +556,7 @@ int WINAPI wWinMain(
 	std::wstring commandline;
 	std::wstring cmd;
 	bool bWaitForNotepadClose = true;
-
+	//testCommandLineParse();
 	MyRegisterClass(hThisInstance);
 
 	if (!ReadOptions(commandline, bWaitForNotepadClose, bDebug))
