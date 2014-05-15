@@ -1,29 +1,28 @@
-// SystemTraySDK.cpp: implementation of the CSystemTray class.
+//===- SystemTraySDK.cpp: implementation CSystemTray class. -----*- C++ -*-===//
 //
-// NON-MFC VERSION
+//                     NotepadStarter
+//
+// This file is distributed under the New BSD License. See license.txt.
+//
+//===----------------------------------------------------------------------===//
 //
 // This class is a light wrapper around the windows system tray stuff. It
 // adds an icon to the system tray with the specified ToolTip text and 
 // callback notification value, which is sent back to the Parent window.
 //
-// Updated: 21 Sep 2000 - Added GetDoWndAnimation - animation only occurs if the system
-//                        settings allow it (Matthew Ellis). Updated the GetTrayWndRect
-//                        function to include more fallback logic (Matthew Ellis)
+// Updated: 21 Sep 2000 - Added GetDoWndAnimation - animation only occurs if the
+//                        system settings allow it (Matthew Ellis). Updated the
+//                        GetTrayWndRect function to include more fallback logic
 //
-// Updated: 4 Aug 2003 - Fixed bug that was stopping icon from being recreated when
-//                       Explorer crashed
+// Updated: 4 Aug 2003 - Fixed bug that was stopping icon from being recreated
+//                       when Explorer crashed
 //                       Fixed resource leak in SetIcon
-//						 Animate() now checks for empty icon list - Anton Treskunov
-//						 Added the virutal CustomizeMenu() method - Anton Treskunov
+//						 Animate() now checks for empty icon list
+//						 Added the virutal CustomizeMenu() method
 //
-// Written by Chris Maunder (cmaunder@mail.com)
-// Copyright (c) 1999-2003.
-//
-/////////////////////////////////////////////////////////////////////////////
-
+//===----------------------------------------------------------------------===//
 
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
-
 
 // Windows Header Files:
 #include <windows.h>

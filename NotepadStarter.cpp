@@ -1,24 +1,17 @@
-//----------------------------------------------------------------------------
-// Description: NotepadStarter replaces the original wondows notepad 
-// additional effort was done to suspend the calling task as long as the notepad++ 
-// window with the edited text is open.
-// Author  : Yonggang Luo(luoyonggang(at)gmail.com)
-// Creation : 2014-05-15
+//===- NotepadStarter.cpp: notepad++ launcher -------------------*- C++ -*-===//
 //
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either
-// version 2 of the License, or (at your option) any later version.
+//                     NotepadStarter
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// This file is distributed under the New BSD License. See license.txt.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-//----------------------------------------------------------------------------
+//===----------------------------------------------------------------------===//
+//
+// NotepadStarter replaces the original Windows notepad with additional effort
+// was done to suspend the calling task as long as the notepad++ window with the
+// edited text is open. We use the Windows file path to identify if the path we
+// required is corresponding this NotepadStarter instance.
+//
+//===----------------------------------------------------------------------===//
 
 #include <windows.h>
 #include <winreg.h>
@@ -39,7 +32,7 @@
 #include "resource.h"
 #include <assert.h>
 #include "ns_defines.h"
-#define MDBG_COMP "Nppl:"
+#define MDBG_COMP "NS:"
 #include "NotepadDebug.h"
 
 #include <Shlwapi.h>
@@ -49,7 +42,7 @@
 #pragma comment(lib, "psapi.lib")
 
 #define CAPTION_POST TEXT(" ")
-#define CAPTION_PRE TEXT("NL ")
+#define CAPTION_PRE TEXT("NS ")
 #define CAPTION CAPTION_PRE NS_VERSION CAPTION_POST // must be 9 chars long to fit to current copyName()
 #define WM_ICON_NOTIFY WM_APP+10
 #define MAX_TOOLTIP_LEN 64

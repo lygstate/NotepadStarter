@@ -1,4 +1,17 @@
-// SystemTraySDK.h: interface for the CSystemTray class.
+//===- SystemTraySDK.h - interface for the CSystemTray class. ---*- C++ -*-===//
+//
+//                     NotepadStarter
+//
+// This file is distributed under the New BSD License. See license.txt.
+//
+//===----------------------------------------------------------------------===//
+//
+// This CSystemTray class provide a way to create a Windows notification icon
+// to track whether NotepadStarter is terminated.
+//
+//===----------------------------------------------------------------------===//
+
+// SystemTraySDK.h: 
 //
 // Written by Chris Maunder (cmaunder@mail.com)
 // Copyright (c) 1998.
