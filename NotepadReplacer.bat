@@ -19,17 +19,17 @@ call request-admin.bat %~dpnxs0 & exit /B
 :SYSTEMROOT
 set NotepadFolder=%SYSTEMROOT%
 set NEXT=SYSTEM32
-goto ReplaceNotepad;
+goto ReplaceNotepad
 
 :SYSTEM32
 set NotepadFolder=%SYSTEMROOT%\SYSTEM32
 set NEXT=SysWOW64
-goto ReplaceNotepad;
+goto ReplaceNotepad
 
 :SysWOW64
 set NotepadFolder=%SYSTEMROOT%\SysWOW64
 set NEXT=end
-goto ReplaceNotepad;
+goto ReplaceNotepad
 
 :ReplaceNotepad
 if not exist %NotepadFolder%\notepad.exe (goto CopyNotepad)
