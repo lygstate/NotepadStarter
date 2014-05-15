@@ -2,12 +2,23 @@
 //
 #include "resource.h"
 #include "../VersionInfo.inc"
-#include "VerRsrc.h"
 
+#define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
 //
-// Icon
+// Generated from the TEXTINCLUDE 2 resource.
 //
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (Simplified, PRC) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -15,23 +26,28 @@
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
     "resource.h\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
     "\r\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
     "#include ""afxres.h""\r\0"
 END
 
 #endif    // APSTUDIO_INVOKED
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
 #ifndef NDEBUG
 #define VER_DEBUG                   VS_FF_DEBUG
 #else
@@ -55,10 +71,9 @@ END
 
 
 #undef _NS_STR_HELPER
-#define _NS_STR_HELPER(x) x
+#define _NS_STR_HELPER(x) #x
 
 #define VER_FILEVERSION             NS_VERSION_MAJOR,NS_VERSION_MINOR,NS_VERSION_MAINTENANCE,NS_VERSION_REVISION
-#undef VER_PRODUCTVERSION
 #define VER_PRODUCTVERSION          VER_FILEVERSION
 #define VER_FILEFLAGS               (VER_PRIVATEBUILD|VER_PRERELEASE|VER_DEBUG)
 #define VER_FILEFLAGSMASK           VS_FFI_FILEFLAGSMASK
@@ -74,7 +89,6 @@ END
 #define VER_LEGALTRADEMARKS2_STR    "New BSD License"
 #define VER_ORIGINALFILENAME_STR    "NotepadStarterPlugin.dll"
 #define VER_PRODUCTNAME_STR         "NotepadStarter Plugin"
-#undef VER_PRODUCTVERSION_STR
 #define VER_PRODUCTVERSION_STR      VER_FILEVERSION_STR
 
 
@@ -118,14 +132,18 @@ BEGIN
     END
 END
 
+#endif    // Chinese (Simplified, PRC) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //
-// Menu
+// Generated from the TEXTINCLUDE 3 resource.
 //
 
 
 /////////////////////////////////////////////////////////////////////////////
-//
-// String Table
-//
+#endif    // not APSTUDIO_INVOKED
 
