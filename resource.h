@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by notepad_private.rc
+// Used by NotepadStarter.rc
 //
 #define IDI_NOTEPAD_STARTER_ICON                       102
 #define IDR_MENU1                       103
