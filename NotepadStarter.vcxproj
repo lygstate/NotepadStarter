@@ -66,6 +66,11 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <ProgramDatabaseFile>$(IntDir)\pdb\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /y $(ProjectDir)NotepadStarterInstall.bat $(ProjectDir)\bin\
+copy /y $(ProjectDir)NotepadStarterUninstall.bat $(ProjectDir)\bin\
+copy /y $(ProjectDir)request-admin.bat $(ProjectDir)\bin\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -87,8 +92,9 @@
       <ProgramDatabaseFile>$(IntDir)\pdb\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy /y $(ProjectDir)NotepadStarterInstall.bat $(ProjectDir)\bin\
+copy /y $(ProjectDir)NotepadStarterUninstall.bat $(ProjectDir)\bin\
+copy /y $(ProjectDir)request-admin.bat $(ProjectDir)\bin\</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>
