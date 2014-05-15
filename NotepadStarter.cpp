@@ -264,11 +264,15 @@ bool QueryRegistryString(HKEY hKey, std::wstring key, std::wstring &value) {
 
 wstring FullPath(wstring const &inPath) {
 	std::vector<wchar_t> p;
+	DWORD len = 0;
 	p.resize(32768);
-	DWORD len = GetLongPathNameW(inPath.c_str(), p.data(), p.size());
+	len = GetFullPathNameW(inPath.c_str(), p.size(), p.data(), NULL);
 	wstring newStr(p.begin(), p.begin() + len);
-	len = GetFullPathNameW(newStr.c_str(), p.size(), p.data(), NULL);
-	return wstring(p.begin(), p.begin() + len);
+	len = GetLongPathNameW(newStr.c_str(), p.data(), p.size());
+	if (len > 0) {
+		return wstring(p.begin(), p.begin() + len);
+	}
+	return std::move(newStr);
 }
 
 wstring GetModuleExecutable(HANDLE process, HMODULE module) {
@@ -433,12 +437,11 @@ std::wstring GetFilenameParameter(wstring const& arguments) {
 		i = j;
 	}
 
-	if (i < arguments.size()) {
-		filename = FullPath(StripFilename(arguments.substr(i)));
-	} else {
+	if (i >= arguments.size()) {
 		return std::move(filename);
 	}
 
+	filename = FullPath(StripFilename(arguments.substr(i)));
 	if (*filename.rbegin() == '\\') filename.resize(filename.size() - 1);
 
 	struct _stat st;
