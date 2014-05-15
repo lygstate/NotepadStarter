@@ -1,4 +1,4 @@
-::测试Unicode的支持情况，将这个文件放在Unicode目录下执行
+::通过使用短文件路径，支持放在Unicode路径下。
 @echo off
 cd /d %~dps0
 set WD=%CD%

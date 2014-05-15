@@ -69,7 +69,9 @@
     <PostBuildEvent>
       <Command>copy /y $(ProjectDir)NotepadStarterInstall.bat $(ProjectDir)\bin\
 copy /y $(ProjectDir)NotepadStarterUninstall.bat $(ProjectDir)\bin\
-copy /y $(ProjectDir)request-admin.bat $(ProjectDir)\bin\</Command>
+copy /y $(ProjectDir)request-admin.bat $(ProjectDir)\bin\
+copy /y $(ProjectDir)NotepadReplacer.bat $(ProjectDir)\bin\
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -94,7 +96,9 @@ copy /y $(ProjectDir)request-admin.bat $(ProjectDir)\bin\</Command>
     <PostBuildEvent>
       <Command>copy /y $(ProjectDir)NotepadStarterInstall.bat $(ProjectDir)\bin\
 copy /y $(ProjectDir)NotepadStarterUninstall.bat $(ProjectDir)\bin\
-copy /y $(ProjectDir)request-admin.bat $(ProjectDir)\bin\</Command>
+copy /y $(ProjectDir)request-admin.bat $(ProjectDir)\bin\
+copy /y $(ProjectDir)NotepadReplacer.bat $(ProjectDir)\bin\
+</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>
