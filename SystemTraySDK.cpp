@@ -1,4 +1,4 @@
-// TrayIcon.cpp: implementation of the CSystemTray class.
+// SystemTraySDK.cpp: implementation of the CSystemTray class.
 //
 // NON-MFC VERSION
 //

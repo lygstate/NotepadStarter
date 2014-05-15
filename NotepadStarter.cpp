@@ -2,10 +2,8 @@
 // Description: NotepadStarter replaces the original wondows notepad 
 // additional effort was done to suspend the calling task as long as the notepad++ 
 // window with the edited text is open.
-// Author  : Mattes H. mattesh(at)gmx.net
-// Creation : 2013-01-13
-// The source is based on an idea from Stepho (superstepho.free.fr)
-// Creation : 2005-08-22
+// Author  : Yonggang Luo(luoyonggang(at)gmail.com)
+// Creation : 2014-05-15
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
