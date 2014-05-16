@@ -318,7 +318,7 @@ std::wstring QueryNotepadCommand() {
 	bool hasNpp = false;
 	if (errorCode == ERROR_SUCCESS)
 	{
-		bool hasNpp = QueryRegistryString(hKey, L"Notepad++", NotepadPlusPlusFolder);
+		hasNpp = QueryRegistryString(hKey, L"Notepad++", NotepadPlusPlusFolder);
 		NotepadPlusPlusFolder = FullPath(NotepadPlusPlusFolder);
 		QueryRegistryString(hKey, L"Debugger", NotepadStarter);
 		NotepadStarter = FullPath(NotepadStarter);

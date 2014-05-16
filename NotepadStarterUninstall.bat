@@ -37,6 +37,9 @@ if not exist %NotepadFolder%\notepad.NotepadStarter.exe (goto %NEXT%)
 takeown /f %NotepadFolder%\notepad.exe
 icacls %NotepadFolder%\notepad.exe /grant "%USERNAME%":f
 copy %NotepadFolder%\notepad.NotepadStarter.exe %NotepadFolder%\notepad.exe /y
+if not %errorLevel% == 0 (
+    goto %NEXT%
+)
 del %NotepadFolder%\notepad.NotepadStarter.exe
 goto %NEXT% 
 
