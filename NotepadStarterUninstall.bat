@@ -17,18 +17,20 @@ call request-admin.bat %~dpnxs0 & exit /B
 :gotAdmin
 reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f 
 
+del /F /Q %SystemRoot%\NotepadStarter.exe
+
 :SYSTEMROOT
-set NotepadFolder=%SYSTEMROOT%
+set NotepadFolder=%SystemRoot%
 set NEXT=SYSTEM32
 goto RecoverNotepad
 
 :SYSTEM32
-set NotepadFolder=%SYSTEMROOT%\SYSTEM32
+set NotepadFolder=%SystemRoot%\SYSTEM32
 set NEXT=SysWOW64
 goto RecoverNotepad
 
 :SysWOW64
-set NotepadFolder=%SYSTEMROOT%\SysWOW64
+set NotepadFolder=%SystemRoot%\SysWOW64
 set NEXT=end
 goto RecoverNotepad
 
@@ -36,7 +38,7 @@ goto RecoverNotepad
 if not exist %NotepadFolder%\notepad.NotepadStarter.exe (goto %NEXT%)
 takeown /f %NotepadFolder%\notepad.exe
 icacls %NotepadFolder%\notepad.exe /grant "%USERNAME%":f
-del %NotepadFolder%\notepad.exe
+del /F /Q %NotepadFolder%\notepad.exe
 echo errorlevel=%errorlevel%
 if not %errorLevel% == 0 (
     goto %NEXT%

@@ -70,7 +70,7 @@
       <Command>copy /y $(ProjectDir)NotepadStarterInstall.bat $(ProjectDir)\bin\
 copy /y $(ProjectDir)NotepadStarterUninstall.bat $(ProjectDir)\bin\
 copy /y $(ProjectDir)request-admin.bat $(ProjectDir)\bin\
-copy /y $(ProjectDir)NotepadReplacer.bat $(ProjectDir)\bin\
+copy /y $(ProjectDir)NotepadStarterReplacer.bat $(ProjectDir)\bin\
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -97,7 +97,7 @@ copy /y $(ProjectDir)NotepadReplacer.bat $(ProjectDir)\bin\
       <Command>copy /y $(ProjectDir)NotepadStarterInstall.bat $(ProjectDir)\bin\
 copy /y $(ProjectDir)NotepadStarterUninstall.bat $(ProjectDir)\bin\
 copy /y $(ProjectDir)request-admin.bat $(ProjectDir)\bin\
-copy /y $(ProjectDir)NotepadReplacer.bat $(ProjectDir)\bin\
+copy /y $(ProjectDir)NotepadStarterReplacer.bat $(ProjectDir)\bin\
 </Command>
     </PostBuildEvent>
     <PostBuildEvent>
