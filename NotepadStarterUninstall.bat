@@ -1,9 +1,11 @@
 ::通过使用短文件路径，支持放在Unicode路径下。
 @echo off
+
+cd /d %~dps0..
+if exist "NotepadStarter\.git" (goto end)
+
 ::获取管理员权限
 call "%~dps0request-admin.bat" %~dpnxs0 %*
-
-cd /d %~dps0
 
 reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f 
 del /F /Q %SystemRoot%\NotepadStarter.exe
@@ -20,7 +22,7 @@ goto RecoverNotepad
 
 :SysWOW64
 set NotepadFolder=%SystemRoot%\SysWOW64
-set NEXT=end
+set NEXT=deletePlugins
 goto RecoverNotepad
 
 :RecoverNotepad
@@ -41,8 +43,11 @@ if "%time1%" EQU "%time2%" (
 )
 goto %NEXT% 
 
-:end
+:deletePlugins
+del /F /Q NotepadStarterPlugin.dll
+rd /s /q NotepadStarter
 
+:end
 ::pause
 
 goto :eof
