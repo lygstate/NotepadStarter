@@ -3,6 +3,7 @@
 cd /d %~dps0
 set WD=%CD%
 echo %WD%
+if not exist "%WD%\notepad++.exe" ( goto NoNotepadPlusPlus )
 
 :: --> Check for permissions
 net session >nul 2>&1
@@ -19,4 +20,5 @@ reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Executi
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f /v "Debugger" /t REG_SZ /d "%WD%\NotepadStarter.exe"
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f /v "readme" /t REG_SZ /d "call NotepadStarter.exe instead of original notepad.exe! To disable this option just remove notepad.exe entry"
 
+:NoNotepadPlusPlus
 ::pause

@@ -305,6 +305,10 @@ wstring GetParentDir(std::wstring p) {
 
 bool LaunchProcess(STARTUPINFO& si, PROCESS_INFORMATION& oProcessInfo, std::wstring cmd, bool wait);
 
+bool ExistPath(wstring const& p) {
+	return PathFileExistsW(p.c_str()) == TRUE;
+}
+
 std::wstring QueryNotepadCommand() {
 	HKEY hKey;
 	LSTATUS errorCode = RegOpenKeyExW(
@@ -324,7 +328,7 @@ std::wstring QueryNotepadCommand() {
 		NotepadStarter = FullPath(NotepadStarter);
 		RegCloseKey(hKey);
 	}
-	if (!hasNpp) {
+	if (!hasNpp || !ExistPath(NotepadPlusPlusFolder + L"\\notepad++.exe")) {
 		std::wstring NotepadStarterCurrent = GetThisExecutable();
 		NotepadPlusPlusFolder = GetParentDir(NotepadStarterCurrent);
 		if (NotepadStarter != NotepadStarterCurrent) {
