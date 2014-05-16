@@ -27,7 +27,7 @@
 #include <shellapi.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <ERRNO.H>
+#include <errno.h>
 #include "SystemTraySDK.h"
 #include "resource.h"
 #include <assert.h>
@@ -317,27 +317,20 @@ std::wstring QueryNotepadCommand() {
 		0,
 		KEY_READ,
 		&hKey);
-	std::wstring NotepadPlusPlusFolder = L"";
+	std::wstring NotepadPlusPlusExecutable = L"";
 	std::wstring NotepadStarter;
 	bool hasNpp = false;
 	if (errorCode == ERROR_SUCCESS)
 	{
-		hasNpp = QueryRegistryString(hKey, L"Notepad++", NotepadPlusPlusFolder);
-		NotepadPlusPlusFolder = FullPath(NotepadPlusPlusFolder);
-		QueryRegistryString(hKey, L"Debugger", NotepadStarter);
-		NotepadStarter = FullPath(NotepadStarter);
+		hasNpp = QueryRegistryString(hKey, L"Notepad++", NotepadPlusPlusExecutable);
+		NotepadPlusPlusExecutable = FullPath(NotepadPlusPlusExecutable);
 		RegCloseKey(hKey);
 	}
-	if (!hasNpp || !ExistPath(NotepadPlusPlusFolder + L"\\notepad++.exe")) {
-		std::wstring NotepadStarterCurrent = GetThisExecutable();
-		NotepadPlusPlusFolder = GetParentDir(NotepadStarterCurrent);
-		if (NotepadStarter != NotepadStarterCurrent) {
-			STARTUPINFO si;
-			PROCESS_INFORMATION oProcessInfo;
-			LaunchProcess(si, oProcessInfo, NotepadPlusPlusFolder + L"\\NotepadStarterInstall.bat", true);
-		}
+	if (!hasNpp || !ExistPath(NotepadPlusPlusExecutable)) {
+		MessageBoxW(NULL, L"Please reinstall NotepadStarter", TEXT("NotepadStarter Error"), MB_OK);
+		ExitProcess(0);
 	}
-	return NotepadPlusPlusFolder + L"\\notepad++.exe";
+	return NotepadPlusPlusExecutable;
 }
 
 // read the parameters from registry how to behave
@@ -600,7 +593,7 @@ int WINAPI wWinMain(
 		std::wstring errorMsg = QueryErrorString(dw);
 		std::wstringstream msg;
 		msg << L"CreateProcess() failed with error "
-			<< dw << L": " << errorMsg << L"\nPlease consider checking the configurations in NotepadStarter.ini";
+			<< dw << L": " << errorMsg << L"\nPlease reinstall NotepadStarter";
 		MessageBoxW(NULL, msg.str().c_str(), TEXT("NotepadStarter Error"), MB_OK);
 	} else if (bWaitForNotepadClose) {
 		// message loop for tray icon:
