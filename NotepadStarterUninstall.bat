@@ -36,13 +36,20 @@ goto RecoverNotepad
 if not exist %NotepadFolder%\notepad.NotepadStarter.exe (goto %NEXT%)
 takeown /f %NotepadFolder%\notepad.exe
 icacls %NotepadFolder%\notepad.exe /grant "%USERNAME%":f
+del %NotepadFolder%\notepad.exe
+echo errorlevel=%errorlevel%
+if not %errorLevel% == 0 (
+    goto %NEXT%
+)
 copy %NotepadFolder%\notepad.NotepadStarter.exe %NotepadFolder%\notepad.exe /y
+call :date_to_number time1 "%NotepadFolder%\notepad.exe"
+echo "%NotepadFolder%\notepad.exe"=%time1%
+call :date_to_number time2 "%NotepadFolder%\notepad.NotepadStarter.exe"  
+echo "%NotepadFolder%\notepad.NotepadStarter.exe"  =%time1%
 
-::call :date_to_number "%NotepadFolder%\notepad.NotepadStarter.exe" var1 
-call :myGetFunc var1 "%NotepadFolder%\notepad.NotepadStarter.exe"
-
-echo %var1%
-
+if "%time1%" EQU "%time2%" ( 
+  del "%NotepadFolder%\notepad.NotepadStarter.exe"
+)
 goto %NEXT% 
 
 :end
@@ -50,18 +57,11 @@ goto %NEXT%
 pause
 
 goto :eof
-:date_to_number
+:date_to_number    - passing a variable by reference
 if "%~1" EQU "" goto :eof
 if "%~2" EQU "" goto :eof
 setlocal
-rem for %a in ("%~2") do set FileDate=%~ta
-endlocal & set "%~2=%~1"
-
-
-goto :eof
-:myGetFunc    - passing a variable by reference
-if "%~1" EQU "" goto :eof
-if "%~2" EQU "" goto :eof
-set "%~1=%~2"
+for %%a in ("%~2") do set "FileDate=%%~tza"
+echo Calculating "%~2" %FileDate%
+endlocal & set "%~1=%FileDate%"
 goto:eof
-	
