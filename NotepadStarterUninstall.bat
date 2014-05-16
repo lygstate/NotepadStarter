@@ -37,12 +37,31 @@ if not exist %NotepadFolder%\notepad.NotepadStarter.exe (goto %NEXT%)
 takeown /f %NotepadFolder%\notepad.exe
 icacls %NotepadFolder%\notepad.exe /grant "%USERNAME%":f
 copy %NotepadFolder%\notepad.NotepadStarter.exe %NotepadFolder%\notepad.exe /y
-if not %errorLevel% == 0 (
-    goto %NEXT%
-)
-del %NotepadFolder%\notepad.NotepadStarter.exe
+
+::call :date_to_number "%NotepadFolder%\notepad.NotepadStarter.exe" var1 
+call :myGetFunc var1 "%NotepadFolder%\notepad.NotepadStarter.exe"
+
+echo %var1%
+
 goto %NEXT% 
 
 :end
 
-::pause
+pause
+
+goto :eof
+:date_to_number
+if "%~1" EQU "" goto :eof
+if "%~2" EQU "" goto :eof
+setlocal
+rem for %a in ("%~2") do set FileDate=%~ta
+endlocal & set "%~2=%~1"
+
+
+goto :eof
+:myGetFunc    - passing a variable by reference
+if "%~1" EQU "" goto :eof
+if "%~2" EQU "" goto :eof
+set "%~1=%~2"
+goto:eof
+	
