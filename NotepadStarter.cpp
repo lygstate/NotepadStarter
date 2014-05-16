@@ -57,33 +57,92 @@ static std::wstring filename;
 
 HANDLE g_hMonitorProcess = NULL;
 HANDLE m_hRegisterWait;
+std::wstring g_NppFilepath;
+DWORD  g_Pid = 0xFFFFFFFF;
+
+void StopNotepad() {
+	_TrayIcon.RemoveIcon();
+	ExitProcess(0);
+}
+
 VOID CALLBACK WaitOrTimerCallback(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
 {
-	if( FALSE == TimerOrWaitFired )
-	{
-		UnregisterWait(m_hRegisterWait);
-		CloseHandle(g_hMonitorProcess);
-		_TrayIcon.RemoveIcon();
-		ExitProcess(0);
+	if (TimerOrWaitFired) { // If timeout
+		HANDLE m_hTempProcess = OpenProcess(SYNCHRONIZE, FALSE, g_Pid);
+		if (m_hTempProcess != NULL) {
+			CloseHandle(m_hTempProcess);
+			return;
+		}
 	}
+	UnregisterWait(m_hRegisterWait);
+	CloseHandle(g_hMonitorProcess);
+	StopNotepad();
+}
+
+
+
+wstring FullPath(wstring const &inPath) {
+	std::vector<wchar_t> p;
+	DWORD len = 0;
+	p.resize(32768);
+	len = GetFullPathNameW(inPath.c_str(), p.size(), p.data(), NULL);
+	wstring newStr(p.begin(), p.begin() + len);
+	len = GetLongPathNameW(newStr.c_str(), p.data(), p.size());
+	if (len > 0) {
+		return wstring(p.begin(), p.begin() + len);
+	}
+	return std::move(newStr);
+}
+
+wstring GetModuleExecutable(HANDLE process, HMODULE module) {
+	std::vector<wchar_t> p;
+	p.resize(8192);
+	while (true) {
+		DWORD sz;
+		if (process == NULL) {
+			sz = GetModuleFileNameW(module, p.data(), p.size() - 1);
+		}
+		else {
+			sz = GetModuleFileNameExW(process, module, p.data(), p.size() - 1);
+		}
+		p.resize(sz + 1);
+		p.data()[sz] = 0;
+		if (GetLastError() == ERROR_INSUFFICIENT_BUFFER || p.size() <= sz){
+			p.resize(p.size() << 1);
+			continue;
+		}
+		break;
+	}
+	if (p.size() == 1) {
+		return L"";
+	}
+	return std::move(FullPath(p.data()));
 }
 
 void MonitorPid(DWORD pid) {
-	g_hMonitorProcess = OpenProcess(SYNCHRONIZE, FALSE, pid);
-
-	if (g_hMonitorProcess != NULL
-		&& FALSE == RegisterWaitForSingleObject(
+	g_Pid = pid;
+	g_hMonitorProcess = OpenProcess(SYNCHRONIZE | PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
+	if (g_hMonitorProcess == NULL) {
+		StopNotepad();
+	}
+	g_NppFilepath = GetModuleExecutable(g_hMonitorProcess, NULL);
+	if (g_NppFilepath == L"") {
+		StopNotepad();
+	}
+	if (FALSE == RegisterWaitForSingleObject(
 		&m_hRegisterWait,
 		g_hMonitorProcess,
 		WaitOrTimerCallback,
 		0,
-		INFINITE,
+		1000,
 		WT_EXECUTEONLYONCE))
 	{
 		CloseHandle(g_hMonitorProcess);
 		g_hMonitorProcess = NULL;
+		StopNotepad();
 	}
 }
+
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -252,44 +311,6 @@ bool QueryRegistryString(HKEY hKey, std::wstring key, std::wstring &value) {
 		return false;
 	}
 	return true;
-}
-
-wstring FullPath(wstring const &inPath) {
-	std::vector<wchar_t> p;
-	DWORD len = 0;
-	p.resize(32768);
-	len = GetFullPathNameW(inPath.c_str(), p.size(), p.data(), NULL);
-	wstring newStr(p.begin(), p.begin() + len);
-	len = GetLongPathNameW(newStr.c_str(), p.data(), p.size());
-	if (len > 0) {
-		return wstring(p.begin(), p.begin() + len);
-	}
-	return std::move(newStr);
-}
-
-wstring GetModuleExecutable(HANDLE process, HMODULE module) {
-	std::vector<wchar_t> p;
-	p.resize(8192);
-	while (true) {
-		DWORD sz;
-		if (process == NULL) {
-			sz = GetModuleFileNameW(module, p.data(), p.size() - 1);
-		}
-		else {
-			sz = GetModuleFileNameExW(process, module, p.data(), p.size() - 1);
-		}
-		p.resize(sz + 1);
-		p.data()[sz] = 0;
-		if (GetLastError() == ERROR_INSUFFICIENT_BUFFER || p.size() <= sz){
-			p.resize(p.size() << 1);
-			continue;
-		}
-		break;
-	}
-	if (p.size() == 1) {
-		return L"";
-	}
-	return std::move(FullPath(p.data()));
 }
 
 bool ExistPath(wstring const& p) {
@@ -539,6 +560,14 @@ int WINAPI wWinMain(
 	int nShowCmd
 	)
 {
+	char name[1024];
+	DWORD pid = GetCurrentProcessId();
+	sprintf(name, "D:\\CI\\ides\\NotepadStarter\\log.%d.txt", pid);
+	freopen(name, "w", stderr);
+	//_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
+	//_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 	std::wstring commandline;
 	std::wstring cmd;
 	bool bWaitForNotepadClose = true;
