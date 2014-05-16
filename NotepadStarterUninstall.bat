@@ -1,22 +1,11 @@
 ::通过使用短文件路径，支持放在Unicode路径下。
 @echo off
+::获取管理员权限
+call "%~dps0request-admin.bat" %~dpnxs0 %*
+
 cd /d %~dps0
-set WD=%CD%
-echo %WD%
 
-:: --> Check for permissions
-net session >nul 2>&1
-:: --> If error flag not set, we do have administrator permission.
-if %errorLevel% == 0 (
-    goto gotAdmin
-)
-
-echo %~dpnxs0
-call request-admin.bat %~dpnxs0 & exit /B
-
-:gotAdmin
 reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f 
-
 del /F /Q %SystemRoot%\NotepadStarter.exe
 
 :SYSTEMROOT

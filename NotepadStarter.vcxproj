@@ -41,13 +41,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)bin\</OutDir>
+    <OutDir>$(SolutionDir)bin\plugins\NotepadStarter\</OutDir>
     <LinkIncremental>false</LinkIncremental>
     <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\</OutDir>
+    <OutDir>$(SolutionDir)bin\plugins\NotepadStarter\</OutDir>
     <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -67,11 +67,7 @@
       <ProgramDatabaseFile>$(IntDir)\pdb\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y $(ProjectDir)NotepadStarterInstall.bat $(ProjectDir)\bin\
-copy /y $(ProjectDir)NotepadStarterUninstall.bat $(ProjectDir)\bin\
-copy /y $(ProjectDir)request-admin.bat $(ProjectDir)\bin\
-copy /y $(ProjectDir)NotepadStarterReplacer.bat $(ProjectDir)\bin\
-</Command>
+      <Command>call $(ProjectDir)NotepadStarterRelease.bat</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -94,11 +90,7 @@ copy /y $(ProjectDir)NotepadStarterReplacer.bat $(ProjectDir)\bin\
       <ProgramDatabaseFile>$(IntDir)\pdb\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y $(ProjectDir)NotepadStarterInstall.bat $(ProjectDir)\bin\
-copy /y $(ProjectDir)NotepadStarterUninstall.bat $(ProjectDir)\bin\
-copy /y $(ProjectDir)request-admin.bat $(ProjectDir)\bin\
-copy /y $(ProjectDir)NotepadStarterReplacer.bat $(ProjectDir)\bin\
-</Command>
+      <Command>call $(ProjectDir)NotepadStarterRelease.bat</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>
