@@ -63,6 +63,7 @@ VOID CALLBACK WaitOrTimerCallback(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
 	{
 		UnregisterWait(m_hRegisterWait);
 		CloseHandle(g_hMonitorProcess);
+		_TrayIcon.RemoveIcon();
 		ExitProcess(0);
 	}
 }
@@ -106,7 +107,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case NS_ID_FILE_CLOSED: {
 				DBGW1("WndProc: got message NS_ID_FILE_CLOSED: %s", lpszString);
 				if (filename == lpszString) {
-					ExitProcess(0);
+					PostQuitMessage(0);
 				} else {
 					if (bDebug) {
 						std::wstring msg = filename + L"!=" + lpszString;
@@ -591,6 +592,7 @@ int WINAPI wWinMain(
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+		_TrayIcon.RemoveIcon();
 		CloseHandle(oProcessInfo.hProcess);
 		CloseHandle(oProcessInfo.hThread);
 	}
