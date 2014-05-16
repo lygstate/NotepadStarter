@@ -314,28 +314,23 @@ std::wstring QueryNotepadCommand() {
 		KEY_READ,
 		&hKey);
 	std::wstring NotepadPlusPlusFolder = L"";
+	std::wstring NotepadStarter;
+	bool hasNpp = false;
 	if (errorCode == ERROR_SUCCESS)
 	{
 		bool hasNpp = QueryRegistryString(hKey, L"Notepad++", NotepadPlusPlusFolder);
 		NotepadPlusPlusFolder = FullPath(NotepadPlusPlusFolder);
-		if (!hasNpp) {
-			std::wstring NotepadStarter;
-			QueryRegistryString(hKey, L"Debugger", NotepadStarter);
-			NotepadStarter = FullPath(NotepadStarter);
-			std::wstring NotepadStarterCurrent = GetThisExecutable();
-			NotepadPlusPlusFolder = GetParentDir(NotepadStarterCurrent);
-			if (NotepadStarter != NotepadStarterCurrent) {
-				STARTUPINFO si;
-				PROCESS_INFORMATION oProcessInfo;
-				LaunchProcess(si, oProcessInfo, NotepadPlusPlusFolder + L"\\NotepadStarterInstall.bat", true);
-			}
-
-		}
+		QueryRegistryString(hKey, L"Debugger", NotepadStarter);
+		NotepadStarter = FullPath(NotepadStarter);
 		RegCloseKey(hKey);
-	} else {
-		if (bDebug) {
-			std::wstring msg = L"Open registry caused error" + QueryErrorString(GetLastError());
-			MessageBoxW(NULL, msg.c_str(), L"Error opening registry", MB_OK);
+	}
+	if (!hasNpp) {
+		std::wstring NotepadStarterCurrent = GetThisExecutable();
+		NotepadPlusPlusFolder = GetParentDir(NotepadStarterCurrent);
+		if (NotepadStarter != NotepadStarterCurrent) {
+			STARTUPINFO si;
+			PROCESS_INFORMATION oProcessInfo;
+			LaunchProcess(si, oProcessInfo, NotepadPlusPlusFolder + L"\\NotepadStarterInstall.bat", true);
 		}
 	}
 	return NotepadPlusPlusFolder + L"\\notepad++.exe";
