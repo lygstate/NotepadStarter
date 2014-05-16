@@ -291,23 +291,11 @@ wstring GetModuleExecutable(HANDLE process, HMODULE module) {
 	return std::move(FullPath(p.data()));
 }
 
-wstring GetThisExecutable()
-{
-	return GetModuleExecutable(NULL, NULL);
-}
-
-
-wstring GetParentDir(std::wstring p) {
-	wchar_t *ptr = (wchar_t*)p.c_str();
-	PathRemoveFileSpecW(ptr);
-	return ptr;
-}
-
-bool LaunchProcess(STARTUPINFO& si, PROCESS_INFORMATION& oProcessInfo, std::wstring cmd, bool wait);
-
 bool ExistPath(wstring const& p) {
 	return PathFileExistsW(p.c_str()) == TRUE;
 }
+
+bool LaunchProcess(STARTUPINFO& si, PROCESS_INFORMATION& oProcessInfo, std::wstring cmd, bool wait, bool noWindow = false);
 
 std::wstring QueryNotepadCommand() {
 	HKEY hKey;
@@ -467,14 +455,14 @@ bool CreateCommandLine(std::wstring& cmd, std::wstring& filename, boolean const&
 	return true;
 }
 
-bool LaunchProcess(STARTUPINFO& si, PROCESS_INFORMATION& oProcessInfo, std::wstring cmd, bool wait) {
+bool LaunchProcess(STARTUPINFO& si, PROCESS_INFORMATION& oProcessInfo, std::wstring cmd, bool wait, bool noWindow) {
 	// preparation the notepad++ process launch information.
 	memset(&si, 0, sizeof(si));
 	si.cb = sizeof(si);
 	memset(&oProcessInfo, 0, sizeof(oProcessInfo));
 	// launch the Notepad++
 	std::vector<wchar_t> cmdStr(cmd.c_str(), cmd.c_str() + cmd.size() + 1);
-	if (CreateProcessW(NULL, cmdStr.data(), NULL, NULL, false, 0, NULL, NULL, &si, &oProcessInfo) == FALSE) {
+	if (CreateProcessW(NULL, cmdStr.data(), NULL, NULL, FALSE, noWindow ? CREATE_NO_WINDOW : 0, NULL, NULL, &si, &oProcessInfo) == FALSE) {
 		CloseHandle(oProcessInfo.hProcess);
 		CloseHandle(oProcessInfo.hThread);
 		return false;
