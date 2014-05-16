@@ -19,6 +19,9 @@ Because notepad.exe is a blocking executable, so NotepadStarter behaves blocking
 Notepad++ have multiple tab page, so NotepadStarter will terminated when the corresponding
 tab page closed or the corresponding Notepad++ application is closed.
 
+##Release
+Use [Plugin Manager](http://www.brotherstone.co.uk/npp/pm/#developer) to release NotepadStarter
+
 ##Contributions
 Comments, issues and contributions can be done at [Github|NotepadStarter](https://github.com/lygstate/notepadstarter)
 
