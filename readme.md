@@ -21,3 +21,13 @@ tab page closed or the corresponding Notepad++ application is closed.
 
 ##Contributions
 Comments, issues and contributions can be done at [Github|NotepadStarter](https://github.com/lygstate/notepadstarter)
+
+##Installation
+Downloading the NotepadStarter-major.minor.maintenance.revision.zip from [NotepadStarter releases](https://github.com/lygstate/NotepadStarter/releases)
+Extract the content into ${Notepad++InstallDir}\plugins\, running Notepad++, then it's will prompt a window how two installing the NotepadStarter.
+There is two mode:
+ * `Yes`: Install NotepadStarter as 'notepad.exe Image File Execution
+ * `No`: Install NotepadStarter to replace the system notepad.exe completely(backup the original notepad.exe as notepad.NotepadStarter.exe
+
+##Uninstallation
+ Running the script ${Notepad++InstallDir}\plugins\NotepadStarter\NotepadStarterUninstall.bat
