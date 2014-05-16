@@ -1,61 +1,51 @@
 ::通过使用短文件路径，支持放在Unicode路径下。
 @echo off
 
-cd /d %~dps0..
-if exist "NotepadStarter\.git" (goto end)
-
 ::获取管理员权限
-call "%~dps0request-admin.bat" %~dpnxs0 %*
+call "%~dps0request-admin.bat" "%~dpnxs0" %*
 
 reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f 
-del /F /Q %SystemRoot%\NotepadStarter.exe
 
-:SYSTEMROOT
-set NotepadFolder=%SystemRoot%
-set NEXT=SYSTEM32
-goto RecoverNotepad
+call :RetrieveFileTime NotepadStarterTime "%SystemRoot%\NotepadStarter.exe"
 
-:SYSTEM32
-set NotepadFolder=%SystemRoot%\SYSTEM32
-set NEXT=SysWOW64
-goto RecoverNotepad
+call :RecoverNotepad "%SystemRoot%"
+call :RecoverNotepad "%SystemRoot%\System32"
+call :RecoverNotepad "%SystemRoot%\SysWOW64"
 
-:SysWOW64
-set NotepadFolder=%SystemRoot%\SysWOW64
-set NEXT=deletePlugins
-goto RecoverNotepad
+del /F /Q "%SystemRoot%\NotepadStarter.exe"
 
-:RecoverNotepad
-if not exist %NotepadFolder%\notepad.NotepadStarter.exe (goto %NEXT%)
-takeown /f %NotepadFolder%\notepad.exe
-icacls %NotepadFolder%\notepad.exe /grant "%USERNAME%":f
-del /F /Q %NotepadFolder%\notepad.exe
-echo errorlevel=%errorlevel%
-if not %errorLevel% == 0 (
-    goto %NEXT%
-)
-copy %NotepadFolder%\notepad.NotepadStarter.exe %NotepadFolder%\notepad.exe /y
-
-call :date_to_number time1 "%NotepadFolder%\notepad.exe"
-call :date_to_number time2 "%NotepadFolder%\notepad.NotepadStarter.exe"  
-if "%time1%" EQU "%time2%" ( 
-  del "%NotepadFolder%\notepad.NotepadStarter.exe"
-)
-goto %NEXT% 
-
-:deletePlugins
+cd /d %~dps0..
+if exist "NotepadStarter\.git" (goto skipGitRepository)
 del /F /Q NotepadStarterPlugin.dll
 rd /s /q NotepadStarter
-
-:end
+:skipGitRepository
 ::pause
 
 goto :eof
-:date_to_number    - passing a variable by reference
+:RecoverNotepad           -Passing the directory have notepad.exe who will be replaced
+setlocal
+@echo on
+cd /d "%~1"
+if not exist notepad.NotepadStarter.exe (goto recoverFile)
+if not exist notepad.exe (goto recoverFile)
+
+takeown /f notepad.exe
+echo Y | cacls notepad.exe /Grant Administrators:F
+
+call :RetrieveFileTime CurrentFileTime notepad.exe
+if "%NotepadStarterTime%" equ "%CurrentFileTime%" (goto recoverFile)
+del /F /Q notepad.NotepadStarter.exe
+:recoverFile
+echo Y | move /-Y notepad.NotepadStarter.exe notepad.exe
+endlocal
+
+goto :eof
+:RetrieveFileTime    - Retrieve the file modification time %1 from the the file %2
 if "%~1" EQU "" goto :eof
 if "%~2" EQU "" goto :eof
 setlocal
 for %%a in ("%~2") do set "FileDate=%%~tza"
 echo Calculating "%~2" with result:%FileDate%
 endlocal & set "%~1=%FileDate%"
-goto:eof
+
+goto :eof

@@ -20,7 +20,7 @@ Notepad++ have multiple tab page, so NotepadStarter will terminated when the cor
 tab page closed or the corresponding Notepad++ application is closed.
 
 ##Release
-Use [Plugin Manager](http://www.brotherstone.co.uk/npp/pm/#developer) to release NotepadStarter
+Use [Plugin Manager](http://www.brotherstone.co.uk/npp/pm/admin/welcome) to release NotepadStarter
 
 ##Contributions
 Comments, issues and contributions can be done at [Github|NotepadStarter](https://github.com/lygstate/notepadstarter)
@@ -30,7 +30,7 @@ Downloading the NotepadStarter-major.minor.maintenance.revision.zip from [Notepa
 Extract the content into ${Notepad++InstallDir}\plugins\, running Notepad++, then it's will prompt a window how two installing the NotepadStarter.
 There is two mode:
  * `Yes`: Install NotepadStarter as 'notepad.exe Image File Execution
- * `No`: Install NotepadStarter to replace the system notepad.exe completely(backup the original notepad.exe as notepad.NotepadStarter.exe
+ * `No`: Install NotepadStarter to replace the system notepad.exe completely(backup the original `notepad.exe` as `notepad.NotepadStarter.exe`)
 
 ##Uninstallation
  Running the script ${Notepad++InstallDir}\plugins\NotepadStarter\NotepadStarterUninstall.bat

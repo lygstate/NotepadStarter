@@ -13,43 +13,36 @@ if not exist "%NotepadStarter%" ( goto NoNotepadPlusPlusOrNotepadStarter )
 if not exist "%NotepadPlusPlus%" ( goto NoNotepadPlusPlusOrNotepadStarter )
 
 ::获取管理员权限
-call "%~dps0request-admin.bat" %~dpnxs0 %*
+call "%~dps0request-admin.bat" "%~dpnxs0" %*
 
 reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f 
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f /v "Notepad++" /t REG_SZ /d "%NotepadPlusPlus%"
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f /v "readme" /t REG_SZ /d "call NotepadStarter.exe instead of original notepad.exe! To disable this option just remove notepad.exe entry"
-del /F /Q %SystemRoot%\NotepadStarter.exe
-copy %NotepadStarter% %SystemRoot%\NotepadStarter.exe /y
+copy /Y %NotepadStarter% "%SystemRoot%\NotepadStarter.exe"
 if defined UseImageFileExecution (
   reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f /v "Debugger" /t REG_SZ /d "%SystemRoot%\NotepadStarter.exe"
-  goto finished
+  goto PreppareRegistry
 )
 
-:SYSTEMROOT
-set NotepadFolder=%SystemRoot%
-set NEXT=SYSTEM32
-goto ReplaceNotepad
+call :ReplaceNotepad "%SystemRoot%"
+call :ReplaceNotepad "%SystemRoot%\System32"
+call :ReplaceNotepad "%SystemRoot%\SysWOW64"
 
-:SYSTEM32
-set NotepadFolder=%SystemRoot%\SYSTEM32
-set NEXT=SysWOW64
-goto ReplaceNotepad
+:PreppareRegistry
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f /v "Notepad++" /t REG_SZ /d "%NotepadPlusPlus%"
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f /v "readme" /t REG_SZ /d "call NotepadStarter.exe instead of original notepad.exe! To disable this option just remove notepad.exe entry"
 
-:SysWOW64
-set NotepadFolder=%SystemRoot%\SysWOW64
-set NEXT=finished
-goto ReplaceNotepad
-
-:ReplaceNotepad
-if not exist %NotepadFolder%\notepad.exe (goto CopyNotepad)
-takeown /f %NotepadFolder%\notepad.exe
-icacls %NotepadFolder%\notepad.exe /grant "%USERNAME%":f
-if exist %NotepadFolder%\notepad.NotepadStarter.exe (goto CopyNotepad)
-copy %NotepadFolder%\notepad.exe %NotepadFolder%\notepad.NotepadStarter.exe
-:CopyNotepad
-copy %NotepadStarter% %NotepadFolder%\notepad.exe /y
-goto %NEXT% 
-
-:finished
 :NoNotepadPlusPlusOrNotepadStarter
 ::pause
+
+goto :eof
+:ReplaceNotepad           -Passing the directory have notepad.exe who will be replaced
+setlocal
+@echo on
+cd /d "%~1"
+if not exist "notepad.exe" (goto CopyNotepad)
+takeown /f notepad.exe
+echo Y | cacls notepad.exe /Grant Administrators:F
+echo N | move /-Y notepad.exe notepad.NotepadStarter.exe
+:CopyNotepad
+copy /Y "%NotepadStarter%" notepad.exe
+endlocal
+goto :eof

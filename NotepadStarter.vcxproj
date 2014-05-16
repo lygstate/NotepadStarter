@@ -105,7 +105,6 @@
     <ResourceCompile Include="NotepadStarter.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="NotepadStarter.nsi" />
     <None Include="VersionInfo.inc" />
   </ItemGroup>
   <ItemGroup>
