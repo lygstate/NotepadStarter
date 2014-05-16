@@ -1,4 +1,4 @@
-##Introduction
+## Introduction
 This tool designed as a Notepad++ plugin by [Yonggang Luo](luoyonggang(at)gmail.com), when
 it installed as a Notepad++ plugin or running NotepadStarter.exe in the Notepad++ app
 directory, it's will automatically replace the system default notepad.exe application with
@@ -9,7 +9,7 @@ This tool is based on the sources from [npplauncher](http://superstepho.free.fr/
 by [Stepho,2005] and [npplauncher at sf](http://sourceforge.net/projects/npplauncher/)
 by [Mattes H. Mattesh,2013](mattesh(at)gmx.net).
 
-##Design
+## Design
 NotepadStarter make use of a debugger feature in Windows the system will call a hooked 
 process with appended parameters to allow debugging the intended application.
 This hook application will be call whenever the correct application was resolved.
@@ -19,18 +19,18 @@ Because notepad.exe is a blocking executable, so NotepadStarter behaves blocking
 Notepad++ have multiple tab page, so NotepadStarter will terminated when the corresponding
 tab page closed or the corresponding Notepad++ application is closed.
 
-##Release
+## Release
 Use [Plugin Manager](http://www.brotherstone.co.uk/npp/pm/admin/welcome) to release NotepadStarter
 
-##Contributions
+## Contributions
 Comments, issues and contributions can be done at [Github|NotepadStarter](https://github.com/lygstate/notepadstarter)
 
-##Installation
+## Installation
 Downloading the NotepadStarter-major.minor.maintenance.revision.zip from [NotepadStarter releases](https://github.com/lygstate/NotepadStarter/releases)
 Extract the content into ${Notepad++InstallDir}\plugins\, running Notepad++, then it's will prompt a window how two installing the NotepadStarter.
 There is two mode:
  * `Yes`: Install NotepadStarter as 'notepad.exe Image File Execution
  * `No`: Install NotepadStarter to replace the system notepad.exe completely(backup the original `notepad.exe` as `notepad.NotepadStarter.exe`)
 
-##Uninstallation
+## Uninstallation
  Running the script ${Notepad++InstallDir}\plugins\NotepadStarter\NotepadStarterUninstall.bat
