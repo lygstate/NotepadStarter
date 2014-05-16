@@ -42,11 +42,9 @@ if not %errorLevel% == 0 (
     goto %NEXT%
 )
 copy %NotepadFolder%\notepad.NotepadStarter.exe %NotepadFolder%\notepad.exe /y
-call :date_to_number time1 "%NotepadFolder%\notepad.exe"
-echo "%NotepadFolder%\notepad.exe"=%time1%
-call :date_to_number time2 "%NotepadFolder%\notepad.NotepadStarter.exe"  
-echo "%NotepadFolder%\notepad.NotepadStarter.exe"  =%time1%
 
+call :date_to_number time1 "%NotepadFolder%\notepad.exe"
+call :date_to_number time2 "%NotepadFolder%\notepad.NotepadStarter.exe"  
 if "%time1%" EQU "%time2%" ( 
   del "%NotepadFolder%\notepad.NotepadStarter.exe"
 )
@@ -54,7 +52,7 @@ goto %NEXT%
 
 :end
 
-pause
+::pause
 
 goto :eof
 :date_to_number    - passing a variable by reference
@@ -62,6 +60,6 @@ if "%~1" EQU "" goto :eof
 if "%~2" EQU "" goto :eof
 setlocal
 for %%a in ("%~2") do set "FileDate=%%~tza"
-echo Calculating "%~2" %FileDate%
+echo Calculating "%~2" with result:%FileDate%
 endlocal & set "%~1=%FileDate%"
 goto:eof
