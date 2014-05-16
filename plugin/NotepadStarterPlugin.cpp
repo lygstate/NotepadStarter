@@ -175,7 +175,7 @@ bool ExistPath(wstring const& p) {
 	return PathFileExistsW(p.c_str()) == TRUE;
 }
 
-bool LaunchProcess(STARTUPINFO& si, PROCESS_INFORMATION& oProcessInfo, std::wstring cmd, bool wait, bool noWindow=false) {
+bool LaunchProcess(STARTUPINFO& si, PROCESS_INFORMATION& oProcessInfo, std::wstring cmd, bool wait, bool noWindow = false) {
 	// preparation the notepad++ process launch information.
 	memset(&si, 0, sizeof(si));
 	si.cb = sizeof(si);
@@ -237,6 +237,8 @@ void TryInstallNotepadStarter() {
 		}
 		STARTUPINFO si;
 		PROCESS_INFORMATION oProcessInfo;
+		PVOID OldValue = NULL;
+		Wow64DisableWow64FsRedirection(&OldValue);
 		LaunchProcess(si, oProcessInfo, installScript, true, true);
 	}
 }
