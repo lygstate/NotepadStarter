@@ -41,9 +41,7 @@
 #include <psapi.h>
 #pragma comment(lib, "psapi.lib")
 
-#define CAPTION_POST TEXT(" ")
-#define CAPTION_PRE TEXT("NS ")
-#define CAPTION CAPTION_PRE NS_VERSION CAPTION_POST // must be 9 chars long to fit to current copyName()
+#define CAPTION L"NS-" NS_VERSION  L":" // must be 9 chars long to fit to current copyName()
 #define WM_ICON_NOTIFY WM_APP+10
 #define MAX_TOOLTIP_LEN 64
 #define MAX_TITLE_LEN 100
@@ -67,13 +65,6 @@ void StopNotepad() {
 
 VOID CALLBACK WaitOrTimerCallback(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
 {
-	if (TimerOrWaitFired) { // If timeout
-		HANDLE m_hTempProcess = OpenProcess(SYNCHRONIZE, FALSE, g_Pid);
-		if (m_hTempProcess != NULL) {
-			CloseHandle(m_hTempProcess);
-			return;
-		}
-	}
 	UnregisterWait(m_hRegisterWait);
 	CloseHandle(g_hMonitorProcess);
 	StopNotepad();
@@ -119,6 +110,25 @@ wstring GetModuleExecutable(HANDLE process, HMODULE module) {
 	return std::move(FullPath(p.data()));
 }
 
+UINT timer;
+
+VOID CALLBACK Timer(HWND hwnd,
+	UINT uMsg,
+	UINT_PTR idEvent,
+	DWORD dwTime
+	)
+{
+	HANDLE m_hTempProcess = OpenProcess(SYNCHRONIZE | PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, g_Pid);
+	if (m_hTempProcess == NULL) {
+		StopNotepad();
+	}
+	std::wstring thisNppFilePath = GetModuleExecutable(g_hMonitorProcess, NULL);
+	if (thisNppFilePath != g_NppFilepath) {
+		StopNotepad();
+	}
+	CloseHandle(m_hTempProcess);
+}
+
 void MonitorPid(DWORD pid) {
 	g_Pid = pid;
 	g_hMonitorProcess = OpenProcess(SYNCHRONIZE | PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid);
@@ -134,13 +144,21 @@ void MonitorPid(DWORD pid) {
 		g_hMonitorProcess,
 		WaitOrTimerCallback,
 		0,
-		1000,
+		INFINITE,
 		WT_EXECUTEONLYONCE))
 	{
 		CloseHandle(g_hMonitorProcess);
 		g_hMonitorProcess = NULL;
 		StopNotepad();
 	}
+/* TODO: to start heart beat at all, and using 
+nanomsg to send/recv heartbeat.
+*/
+	timer = SetTimer(0, // window handle
+		0, // id of the timer message, leave 0 in this case
+		500, // millis
+		Timer // callback
+		);
 }
 
 
@@ -552,6 +570,16 @@ void testCommandLineParse() {
 	std::wstring name = GetFilenameParameter(L"D:\\CI-Tools\\IDE\\npp\\NotepadStarter.exe notepad test.txt");
 }
 
+
+void enableDebugToFile() {
+	char name[1024];
+	DWORD pid = GetCurrentProcessId();
+	sprintf(name, "D:\\CI\\ides\\NotepadStarter\\log.%d.txt", pid);
+	freopen(name, "w", stderr);
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+}
+
 // main 
 int WINAPI wWinMain(
 	HINSTANCE hThisInstance,
@@ -560,14 +588,7 @@ int WINAPI wWinMain(
 	int nShowCmd
 	)
 {
-	char name[1024];
-	DWORD pid = GetCurrentProcessId();
-	sprintf(name, "D:\\CI\\ides\\NotepadStarter\\log.%d.txt", pid);
-	freopen(name, "w", stderr);
-	//_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
-	//_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDERR);
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
-	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+	//enableDebugToFile();
 	std::wstring commandline;
 	std::wstring cmd;
 	bool bWaitForNotepadClose = true;
@@ -600,7 +621,7 @@ int WINAPI wWinMain(
 	if (bWaitForNotepadClose) {
 		// Wait until child process to exit.
 
-		std::wstring ballonMsg = std::wstring(CAPTION) + L":" + filename;
+		std::wstring ballonMsg = std::wstring(CAPTION) + filename;
 		_TrayIcon.ShowBalloon(TEXT("Double click this icon when editing is finished..."), ballonMsg.c_str(), 1);
 	}
 	//MessageBoxW(NULL, cmd.c_str(), L"NotepadStarter initial command line", MB_OK);
