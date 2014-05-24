@@ -246,7 +246,7 @@ BOOL InitInstance(HINSTANCE hInstance, std::wstring arg/*, int nCmdShow*/)
 	return TRUE;
 }
 
-std::wstring QueryNotepadCommand() {
+std::wstring QueryNotepadPlusPlusCommand() {
 	HKEY hKey;
 	LSTATUS errorCode = RegOpenKeyExW(
 		HKEY_LOCAL_MACHINE,
@@ -268,16 +268,6 @@ std::wstring QueryNotepadCommand() {
 		ExitProcess(0);
 	}
 	return NotepadPlusPlusExecutable;
-}
-
-// read the parameters from registry how to behave
-bool ReadOptions(std::wstring& notepadCmd, bool& bWaitForNotepadClose, /*DWORD& uWaitTime,*/ bool& bDebug)
-{
-	notepadCmd = QueryNotepadCommand(); // The commands path is relative to this executable, test if the executable exist, if doesn't ,then return false
-	bWaitForNotepadClose = true; // Flag for waiting or note waiting for notepad++ to exit. "yes" | "no"
-	//bDebug = false; // default not to debug "yes" | "no"
-
-	return true;
 }
 
 std::wstring StripFilename(std::wstring const& arg) {
@@ -365,8 +355,11 @@ std::wstring GetFilenameParameter(wstring const& arguments) {
 	if (i >= arguments.size()) {
 		return std::move(filename);
 	}
-
-	filename = FullPath(StripFilename(arguments.substr(i)));
+	filename = StripFilename(arguments.substr(i));
+	if (filename[0] == L':') {
+		return std::move(filename);
+	}
+	filename = FullPath(filename);
 	if (*filename.rbegin() == '\\') filename.resize(filename.size() - 1);
 
 	struct _stat st;
@@ -382,30 +375,6 @@ std::wstring GetFilenameParameter(wstring const& arguments) {
 
 	return std::move(filename);
 }
-
-// create from lpszArgument a valid arguments list for program to be called 
-// this is especially to remove the notepad.exe name from the line
-// cmd: the final running cmd
-// filename: the file that notepad will open
-bool CreateCommandLine(std::wstring& cmd, std::wstring& filename, boolean const& bDebug, wstring const& arguments)
-{
-	std::wstring upperApp;
-	std::wstring  fullCommandLine = GetCommandLineW();
-	if (bDebug) {
-		if (IDCANCEL == MessageBoxW(NULL, fullCommandLine.c_str(), L"NotepadStarter initial command line", MB_OKCANCEL))
-			return false;
-	}
-
-	filename = GetFilenameParameter(fullCommandLine);
-
-	if (filename.size() > 0) {
-		cmd = cmd + L" \"" + filename + L"\"";
-	}
-	return true;
-}
-
-
-
 
 BOOL IsProcessRunning(HANDLE hProcess)
 {
@@ -427,6 +396,34 @@ void enableDebugToFile() {
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
 }
 
+int DoCommand(wstring cmd) {
+	wstring executableScript = GetParentDir(GetThisExecutable()) + L"\\";
+	if (cmd == L":install-registry")
+	{
+		executableScript += L"NotepadStarterInstall.bat";
+	}
+	else if (cmd == L":install-replace")
+	{
+		executableScript += L"NotepadStarterReplacer.bat";
+	}
+	else if (cmd == L":uninstall")
+	{
+		executableScript += L"NotepadStarterUninstall.bat";
+	}
+	else
+	{
+		return -1;
+	}
+
+	PVOID OldValue = NULL;
+	Wow64DisableWow64FsRedirection(&OldValue);
+
+	STARTUPINFO si;
+	PROCESS_INFORMATION oProcessInfo;
+	LaunchProcess(si, oProcessInfo, executableScript, false, true);
+	return 0;
+}
+
 // main 
 int WINAPI wWinMain(
 	HINSTANCE hThisInstance,
@@ -436,21 +433,29 @@ int WINAPI wWinMain(
 	)
 {
 	//enableDebugToFile();
-	std::wstring commandline;
-	std::wstring cmd;
-	bool bWaitForNotepadClose = true;
-	//testCommandLineParse();
-	MyRegisterClass(hThisInstance);
 
-	if (!ReadOptions(commandline, bWaitForNotepadClose, bDebug))
-	{
-		return -1; // error case
+	std::wstring  fullCommandLine = GetCommandLineW();
+	filename = GetFilenameParameter(fullCommandLine);
+	//testCommandLineParse();
+
+	if (filename[0] == L':') {
+		return DoCommand(filename);
 	}
 
-	cmd = commandline;
-	if (!CreateCommandLine(cmd, filename, bDebug, lpCmdLine))
-	{
-		return -1; // error case
+	if (bDebug) {
+		if (IDCANCEL == MessageBoxW(NULL, fullCommandLine.c_str(), L"NotepadStarter initial command line", MB_OKCANCEL))
+			return -1;
+	}
+
+	MyRegisterClass(hThisInstance);
+
+	// Flag for waiting or note waiting for notepad++ to exit. "yes" | "no"
+	bool bWaitForNotepadClose = true;
+	/* */
+	std::wstring cmd = QueryNotepadPlusPlusCommand();
+
+	if (filename.size() > 0) {
+		cmd += L" \"" + filename + L"\"";
 	}
 
 	if (bDebug) {
@@ -462,12 +467,12 @@ int WINAPI wWinMain(
 	{
 		return -1; // error case
 	}
+
 	if (filename.size() == 0) { // No need to wait for newly created files.
 		bWaitForNotepadClose = false;
 	}
 	if (bWaitForNotepadClose) {
 		// Wait until child process to exit.
-
 		std::wstring ballonMsg = std::wstring(CAPTION) + filename;
 		_TrayIcon.ShowBalloon(TEXT("Double click this icon when editing is finished..."), ballonMsg.c_str(), 1);
 	}

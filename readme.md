@@ -25,11 +25,21 @@ Use [Plugin Manager](http://www.brotherstone.co.uk/npp/pm/admin/welcome) to rele
 ## Contributions
 Comments, issues and contributions can be done at [Github|NotepadStarter](https://github.com/lygstate/notepadstarter)
 
+## NotepadStarter.exe parameters
+* NotepadStarter.exe :install-registry
+  Install the NotepadStarter as `notepad.exe Image File Execution`
+* NotepadStarter.exe :install-replace
+  Replace the notepad.exe under `%WinDir%`, `%WinDir%\System32` and `%WinDir%\SysWOW64` with NotepadStarter.exe
+* NotepadStarter.exe :uninstall
+  Uninstall NotepadStarter
+* NotepadStarter.exe valid-windows-file-path
+  Open the file valid-windows-file-path by notepad++ with blocking mode
+
 ## Installation
 Downloading the NotepadStarter-major.minor.maintenance.revision.zip from [NotepadStarter releases](https://github.com/lygstate/NotepadStarter/releases)
 Extract the content into ${Notepad++InstallDir}\plugins\, running Notepad++, then it's will prompt a window how two installing the NotepadStarter.
 There is two mode:
- * `Yes`: Install NotepadStarter as 'notepad.exe Image File Execution
+ * `Yes`: Install NotepadStarter as `notepad.exe Image File Execution`
  * `No`: Install NotepadStarter to replace the system notepad.exe completely(backup the original `notepad.exe` as `notepad.NotepadStarter.exe`)
 
 ## Uninstallation

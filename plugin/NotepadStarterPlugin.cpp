@@ -125,22 +125,20 @@ void TryInstallNotepadStarter() {
 			,
 			L"NotepadStarter Error",
 			MB_YESNOCANCEL);
-		std::wstring installScript = GetParentDir(NotepadPlusPlusSelf) + L"\\plugins\\NotepadStarter\\";
+		std::wstring installScript = GetParentDir(NotepadPlusPlusSelf) + L"\\plugins\\NotepadStarter\\NotepadStarter.exe";
 		switch (ret) {
 		default:
 		case IDCANCEL:
 			return;
 		case IDYES:
-			installScript = installScript + L"NotepadStarterInstall.bat";
+			installScript = installScript + L" :install-registry";
 			break;
 		case IDNO:
-			installScript = installScript + L"NotepadStarterReplacer.bat";
+			installScript = installScript + L" :install-replace";
 			break;
 		}
 		STARTUPINFO si;
 		PROCESS_INFORMATION oProcessInfo;
-		PVOID OldValue = NULL;
-		Wow64DisableWow64FsRedirection(&OldValue);
 		LaunchProcess(si, oProcessInfo, installScript, true, true);
 	}
 }
