@@ -117,6 +117,7 @@ void TryInstallNotepadStarter() {
 		RegCloseKey(hKey);
 	}
 	if (!hasNpp || !ExistPath(NotepadPlusPlusExecutable) || NotepadPlusPlusSelf != NotepadPlusPlusExecutable) {
+#if 0
 		int ret = MessageBoxW(
 			NULL,
 			L"Yes: Install NotepadStarter as 'notepad.exe Image File Execution\r\n"
@@ -125,6 +126,9 @@ void TryInstallNotepadStarter() {
 			,
 			L"NotepadStarter Error",
 			MB_YESNOCANCEL);
+#else
+		int ret = IDYES;
+#endif
 		std::wstring installScript = GetParentDir(NotepadPlusPlusSelf) + L"\\plugins\\NotepadStarter\\NotepadStarter.exe";
 		switch (ret) {
 		default:
