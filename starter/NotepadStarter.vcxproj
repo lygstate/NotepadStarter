@@ -44,11 +44,13 @@
     <OutDir>$(SolutionDir)bin\plugins\NotepadStarter\</OutDir>
     <LinkIncremental>false</LinkIncremental>
     <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(SolutionDir)utils</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\plugins\NotepadStarter\</OutDir>
     <IntDir>$(SolutionDir)$(Configuration)\$(ProjectName)\</IntDir>
+    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(SolutionDir)utils</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -103,9 +105,6 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NotepadStarter.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="VersionInfo.inc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SystemTraySDK.h" />

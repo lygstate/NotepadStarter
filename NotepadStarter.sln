@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NotepadStarter", "NotepadStarter.vcxproj", "{FDA85FA9-A7E0-4272-AC75-9A3D1BAD43E4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NotepadStarter", "starter\NotepadStarter.vcxproj", "{FDA85FA9-A7E0-4272-AC75-9A3D1BAD43E4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NotepadStarterPlugin", "plugin\NotepadStarterPlugin.vcxproj", "{1590D7CD-7D3A-4AB7-A355-EE02F7FB987D}"
 EndProject
