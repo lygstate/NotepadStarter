@@ -1,9 +1,8 @@
 ## Introduction
 This tool designed as a Notepad++ plugin by [Yonggang Luo](luoyonggang(at)gmail.com), when
-it installed as a Notepad++ plugin or running NotepadStarter.exe in the Notepad++ app
-directory, it's will automatically replace the system default notepad.exe application with
-Notepad++ (Without need for removing anything from the windows system.).  It's tested
-under Windows 7, but Windows XP should also works.
+it installed as a Notepad++ plugin, it's will automatically replace the system default notepad.exe
+application with Notepad++ (Without need for removing anything from the windows system.).
+It's tested under Windows 7, but Windows XP should also works.
 
 This tool is based on the sources from [npplauncher](http://superstepho.free.fr/)
 by [Stepho,2005] and [npplauncher at sf](http://sourceforge.net/projects/npplauncher/)
