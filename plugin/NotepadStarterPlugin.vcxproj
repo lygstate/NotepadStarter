@@ -115,10 +115,14 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\utils\NotepadUtils.cpp" />
     <ClCompile Include="NotepadStarterPlugin.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NotepadStarterPlugin.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\utils\NotepadUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
