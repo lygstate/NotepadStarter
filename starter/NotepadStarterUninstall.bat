@@ -2,6 +2,7 @@
 @echo off
 
 ::获取管理员权限
+set SHOW_SUBWINDOW=0
 call "%~dps0request-admin.bat" "%~dpnxs0" %*
 
 reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f 
