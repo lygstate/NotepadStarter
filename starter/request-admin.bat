@@ -12,9 +12,12 @@ if %errorLevel% == 0 (
 
 :requestAdmin
 echo Requesting administrative privileges...
-:: rem 1表示显示子窗体，0表示隐藏子窗体 TODO: lygstate 使得子窗体属性跟父窗体属性一致
-:: rem 参见 http://ss64.com/vb/shellexecute.html (normal=1, hide=0)
-set SHOW_SUBWINDOW=0
+:: Reference to  http://ss64.com/vb/shellexecute.html (normal=1, hide=0)
+:: 1 means show the window of the called scripts
+:: 0 means hidden the window of the called scripts
+:: We use the environment variable SHOW_SUBWINDOW([0,1]) to decide the if the
+:: called scripts need to hidden the window.
+if not defined SHOW_SUBWINDOW ( set SHOW_SUBWINDOW=1 )
 echo Set oShell = CreateObject^("WScript.Shell"^) > "%temp%\getadmin.vbs"
 echo param = oShell.ExpandEnvironmentStrings^("%%PARAMS%%"^) >> "%temp%\getadmin.vbs"
 echo Const Q="""" >> "%temp%\getadmin.vbs"
@@ -25,7 +28,7 @@ echo UAC.ShellExecute "cmd", param, "", "runas", %SHOW_SUBWINDOW% >> "%temp%\get
 call "%temp%\getadmin.vbs"
 
 @echo off
-:: 可以退出父脚本
+:: Use the following codes can exit the parent(caller) bat(script) file
 call :___halt1
 exit /b
 :___halt1
