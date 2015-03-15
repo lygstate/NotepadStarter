@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\utils\NotepadUtils.h" />
+    <ClInclude Include="..\utils\USM.h" />
     <ClInclude Include="SystemTraySDK.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
