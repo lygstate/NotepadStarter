@@ -116,6 +116,22 @@ void TryInstallNotepadStarter() {
 		NotepadPlusPlusExecutable = FullPath(NotepadPlusPlusExecutable);
 		RegCloseKey(hKey);
 	}
+
+	std::wstring NotepadPlusPlusDir = L"";
+	bool hasNppDir = false;
+	errorCode = RegOpenKeyExW(
+		HKEY_LOCAL_MACHINE,
+		L"SOFTWARE\\Notepad++",
+		0,
+		KEY_READ,
+		&hKey);
+	if (errorCode == ERROR_SUCCESS)
+	{
+		hasNppDir = QueryRegistryString(hKey, L"", NotepadPlusPlusDir);
+		NotepadPlusPlusDir = FullPath(NotepadPlusPlusDir);
+		RegCloseKey(hKey);
+	}
+
 	if (!hasNpp || !ExistPath(NotepadPlusPlusExecutable) || NotepadPlusPlusSelf != NotepadPlusPlusExecutable) {
 #if 0
 		int ret = MessageBoxW(
@@ -130,6 +146,9 @@ void TryInstallNotepadStarter() {
 		int ret = IDYES;
 #endif
 		std::wstring installScript = GetParentDir(NotepadPlusPlusSelf) + L"\\plugins\\NotepadStarter\\NotepadStarter.exe";
+		if (!ExistPath(installScript) && hasNppDir && ExistPath(NotepadPlusPlusDir)) {
+			installScript = GetEnvironmentVariableValue(L"AppData") + L"\\notepad++\\plugins\\NotepadStarter\\NotepadStarter.exe";
+		}
 		switch (ret) {
 		default:
 		case IDCANCEL:

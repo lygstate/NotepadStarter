@@ -163,3 +163,13 @@ bool LaunchProcess(STARTUPINFO& si, PROCESS_INFORMATION& oProcessInfo, std::wstr
 	}
 	return true;
 }
+
+std::wstring GetEnvironmentVariableValue(const std::wstring& name)
+{
+	DWORD bufferSize = 65535; //Limit according to http://msdn.microsoft.com/en-us/library/ms683188.aspx
+	std::wstring buff;
+	buff.resize(bufferSize);
+	bufferSize = GetEnvironmentVariableW(name.c_str(), &buff[0], bufferSize);
+	buff.resize(bufferSize);
+	return std::move(buff);
+}

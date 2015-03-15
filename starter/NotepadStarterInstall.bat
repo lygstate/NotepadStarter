@@ -7,6 +7,22 @@ set UseImageFileExecution="UseImageFileExecution"
 
 cd /d %~dps0..\..
 set "NotepadPlusPlus=%CD%\notepad++.exe"
+
+set "NotepadPlusPlusDir="
+for /f "tokens=2,*" %%a in ('reg query HKEY_LOCAL_MACHINE\SOFTWARE\Notepad++ /ve 2^>NUL') do set "NotepadPlusPlusDir=%%b"
+
+if exist "%NotepadPlusPlusDir%" goto find_notepad_dir
+
+for /f "tokens=2,*" %%a in ('reg query HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Notepad++ /ve 2^>NUL') do set "NotepadPlusPlusDir=%%b"
+
+:find_notepad_dir
+
+if not exist "%NotepadPlusPlus%" (
+  if exist "%NotepadPlusPlusDir%" (
+    set "NotepadPlusPlus=%NotepadPlusPlusDir%\notepad++.exe"
+  )
+)
+
 cd /d %~dps0
 set "NotepadStarter=%CD%\NotepadStarter.exe"
 if not exist "%NotepadStarter%" ( goto NoNotepadPlusPlusOrNotepadStarter )

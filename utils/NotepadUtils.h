@@ -28,3 +28,4 @@ bool ExistPath(wstring const& p);
 std::wstring QueryErrorString(DWORD dw);
 HANDLE FoundProcessHandle(std::wstring const & processExecutable);
 bool LaunchProcess(STARTUPINFO& si, PROCESS_INFORMATION& oProcessInfo, std::wstring cmd, bool wait, bool noWindow = false);
+std::wstring GetEnvironmentVariableValue(const std::wstring& name);
