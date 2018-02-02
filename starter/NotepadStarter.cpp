@@ -58,7 +58,7 @@ void StopNotepad() {
 	ExitProcess(0);
 }
 
-VOID CALLBACK WaitOrTimerCallback(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
+VOID CALLBACK WaitOrTimerCallback(PVOID /*lpParameter*/, BOOLEAN /*TimerOrWaitFired*/)
 {
 	UnregisterWait(m_hRegisterWait);
 	CloseHandle(g_hMonitorProcess);
@@ -67,12 +67,12 @@ VOID CALLBACK WaitOrTimerCallback(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
 
 
 
-UINT timer;
+UINT_PTR timer;
 
-VOID CALLBACK Timer(HWND hwnd,
-	UINT uMsg,
-	UINT_PTR idEvent,
-	DWORD dwTime
+VOID CALLBACK Timer(HWND /*hwnd*/,
+	UINT /*uMsg*/,
+	UINT_PTR /*idEvent*/,
+	DWORD /*dwTime*/
 	)
 {
 	HANDLE m_hTempProcess = OpenProcess(SYNCHRONIZE | PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, g_Pid);
@@ -156,7 +156,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 			}
 		} else {
-			DBG1("WndProc: got message WM_COPYDATA 0x%x", lParam);
+			DBGW1("WndProc: got message WM_COPYDATA 0x%x", lParam);
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
 		break;
@@ -297,7 +297,7 @@ std::wstring GetFilenameParameter(wstring const& arguments) {
 		L"\\NOTEPAD",
 	};
 
-	std::wstring filename = L"";
+	std::wstring filenameParam = L"";
 
 	size_t i = 0;
 	while (i < arguments.size()) {
@@ -353,27 +353,27 @@ std::wstring GetFilenameParameter(wstring const& arguments) {
 	}
 
 	if (i >= arguments.size()) {
-		return std::move(filename);
+		return std::move(filenameParam);
 	}
-	filename = StripFilename(arguments.substr(i));
-	if (filename[0] == L':') {
-		return std::move(filename);
+	filenameParam = StripFilename(arguments.substr(i));
+	if (filenameParam[0] == L':') {
+		return std::move(filenameParam);
 	}
-	filename = FullPath(filename);
-	if (*filename.rbegin() == '\\') filename.resize(filename.size() - 1);
+	filenameParam = FullPath(filenameParam);
+	if (*filenameParam.rbegin() == '\\') filenameParam.resize(filenameParam.size() - 1);
 
 	struct _stat st;
 	memset(&st, 0, sizeof(st));
-	int ret = _wstat(filename.c_str(), &st);
+	int ret = _wstat(filenameParam.c_str(), &st);
 
 	if (!ret && (st.st_mode & _S_IFDIR) != 0) { //If this file is a directory, try to append \.txt to it.
 		if (bDebug) {
 			MessageBoxW(NULL, arguments.c_str(), L"NotepadStarter is opening the directory as txt.", MB_OK);
 		}
-		filename += L"\\.txt";
+		filenameParam += L"\\.txt";
 	}
 
-	return std::move(filename);
+	return std::move(filenameParam);
 }
 
 BOOL IsProcessRunning(HANDLE hProcess)
@@ -427,9 +427,9 @@ int DoCommand(wstring cmd) {
 // main 
 int WINAPI wWinMain(
 	HINSTANCE hThisInstance,
-	HINSTANCE hPrevInstance,
-	LPWSTR lpCmdLine,
-	int nShowCmd
+	HINSTANCE /*hPrevInstance*/,
+	LPWSTR /*lpCmdLine*/,
+	int /*nShowCmd*/
 	)
 {
 	//enableDebugToFile();
