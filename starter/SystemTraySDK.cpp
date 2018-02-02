@@ -434,7 +434,7 @@ BOOL CSystemTray::SetIconList(UINT uFirstIconID, UINT uLastIconID)
 	if (uFirstIconID > uLastIconID)
 		return FALSE;
 
-	UINT uIconArraySize = uLastIconID - uFirstIconID + 1;
+	//UINT uIconArraySize = uLastIconID - uFirstIconID + 1;
 
 	m_IconList.clear();
 	try
@@ -775,14 +775,14 @@ LRESULT CSystemTray::OnTimer(UINT nIDEvent)
 // This is called whenever the taskbar is created (eg after explorer crashes
 // and restarts. Please note that the WM_TASKBARCREATED message is only passed
 // to TOP LEVEL windows (like WM_QUERYNEWPALETTE)
-LRESULT CSystemTray::OnTaskbarCreated(WPARAM wParam, LPARAM lParam)
+LRESULT CSystemTray::OnTaskbarCreated(WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
 	InstallIconPending();
 	return 0L;
 }
 
 #ifndef _WIN32_WCE
-LRESULT CSystemTray::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
+LRESULT CSystemTray::OnSettingChange(UINT uFlags, LPCTSTR /*lpszSection*/)
 {
 	if (uFlags == SPI_SETWORKAREA)
 		InstallIconPending();
