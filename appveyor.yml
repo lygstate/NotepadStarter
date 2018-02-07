@@ -4,7 +4,7 @@ image: Visual Studio 2017
 
 environment:
   matrix:
-    - PlatformToolset: v140_xp
+    #- PlatformToolset: v140_xp
     - PlatformToolset: v141_xp
 
 platform:
@@ -34,33 +34,33 @@ after_build:
     - cd "%APPVEYOR_BUILD_FOLDER%"
     - ps: >-
 
-        if ($env:PLATFORM_INPUT -eq "x64" -and $env:CONFIGURATION -eq "Release") {
-            Push-AppveyorArtifact "bin\$env:PLATFORM_INPUT\$env:CONFIGURATION\NotepadStarterPlugin.dll" -FileName NotepadStarterPlugin.dll
+        $ZipFileName = "NotepadStarter_${env:APPVEYOR_REPO_TAG_NAME}_$env:PLATFORM_INPUT.zip"
+
+        if ($($env:APPVEYOR_REPO_TAG) -eq "true" -and $env:CONFIGURATION -eq "Release") {
+            cd bin\plugins
+            7z a ..\..\$ZipFileName *
+            cd ..\..
+            Push-AppveyorArtifact $ZipFileName -FileName NotepadStarter.zip
         }
 
-        if ($env:PLATFORM_INPUT -eq "Win32" -and $env:CONFIGURATION -eq "Release") {
-            Push-AppveyorArtifact "bin\plugins\NotepadStarterPlugin.dll" -FileName NotepadStarterPlugin.dll
-        }
+        echo NotepadStarter_${env:APPVEYOR_REPO_TAG_NAME}_$env:PLATFORM_INPUT.zip
 
-        if ($($env:APPVEYOR_REPO_TAG) -eq "true" -and $env:CONFIGURATION -eq "Release" -and $env:PLATFORMTOOLSET -eq "v141_xp") {
-            if($env:PLATFORM_INPUT -eq "x64"){
-              $ZipFileName = "NotepadStarter_$($env:APPVEYOR_REPO_TAG_NAME)_x64.zip"
-              7z a $ZipFileName bin\$env:PLATFORM_INPUT\$env:CONFIGURATION\NotepadStarterPlugin.dll
-            }
-            if($env:PLATFORM_INPUT -eq "Win32"){
-              $ZipFileName = "NotepadStarter_$($env:APPVEYOR_REPO_TAG_NAME)_x86.zip"
-              7z a $ZipFileName bin\plugins\NotepadStarterPlugin.dll
-            }
-        }
+        echo "APPVEYOR_REPO_TAG: $env:APPVEYOR_REPO_TAG"
+
+        echo ${env:APPVEYOR_REPO_TAG_NAME}
+
+        echo "$ZipFileName"
+
+        echo ${env:GITHUB_TOKEN}
 
 artifacts:
-  - path: NotepadStarter_*.zip
+  - path: NotepadStarter_$(APPVEYOR_REPO_TAG_NAME)_$(PLATFORM_INPUT).zip
     name: releases
 
 deploy:
     provider: GitHub
     auth_token:
-        secure: !!TODO, see https://www.appveyor.com/docs/deployment/github/#provider-settings!!
+        secure: cZ6XJJctTlNry5zcr0xygBlDMOxkX5O6pr/C4fNW1qQHLlnVvmuVMajlOFPcMqFl
     artifact: releases
     draft: false
     prerelease: false

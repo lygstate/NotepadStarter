@@ -34,9 +34,9 @@ wstring FullPath(wstring const &inPath) {
 	std::vector<wchar_t> p;
 	DWORD len = 0;
 	p.resize(32768);
-	len = GetFullPathNameW(inPath.c_str(), p.size(), p.data(), NULL);
+	len = GetFullPathNameW(inPath.c_str(), (DWORD)p.size(), p.data(), NULL);
 	wstring newStr(p.begin(), p.begin() + len);
-	len = GetLongPathNameW(newStr.c_str(), p.data(), p.size());
+	len = GetLongPathNameW(newStr.c_str(), p.data(), (DWORD)p.size());
 	if (len > 0) {
 		return wstring(p.begin(), p.begin() + len);
 	}
@@ -49,10 +49,10 @@ wstring GetModuleExecutable(HANDLE process, HMODULE module) {
 	while (true) {
 		DWORD sz;
 		if (process == NULL) {
-			sz = GetModuleFileNameW(module, p.data(), p.size() - 1);
+			sz = GetModuleFileNameW(module, p.data(), (DWORD)p.size() - 1);
 		}
 		else {
-			sz = GetModuleFileNameExW(process, module, p.data(), p.size() - 1);
+			sz = GetModuleFileNameExW(process, module, p.data(), (DWORD)p.size() - 1);
 		}
 		p.resize(sz + 1);
 		p.data()[sz] = 0;
@@ -108,7 +108,7 @@ HANDLE FoundProcessHandle(std::wstring const & processExecutable)
 	DWORD dw = 0;
 	while (true) {
 		DWORD pBytesReturned;
-		if (EnumProcesses(processList.data(), processList.size() * sizeof(DWORD), &pBytesReturned) == FALSE) {
+		if (EnumProcesses(processList.data(), (DWORD)(processList.size() * sizeof(DWORD)), &pBytesReturned) == FALSE) {
 			return 0;
 		}
 		DWORD count = pBytesReturned / sizeof(DWORD);

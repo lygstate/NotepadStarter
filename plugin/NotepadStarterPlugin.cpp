@@ -213,7 +213,7 @@ BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam)
 {
 	std::wstring str;
 	str.resize(1024);
-	int sz = GetClassNameW(hWnd, (LPWSTR)str.data(), str.size());
+	int sz = GetClassNameW(hWnd, (LPWSTR)str.data(), (int)str.size());
 	if (sz <= 0) {
 		return TRUE;
 	}
@@ -231,7 +231,7 @@ BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam)
 void reportMessage(std::wstring const &savedPath, ULONG ns_id) {
 	COPYDATASTRUCT cpst;
 	cpst.dwData = ns_id;
-	cpst.cbData = (savedPath.size() + 1) * sizeof(wchar_t);
+	cpst.cbData = (int)((savedPath.size() + 1) * sizeof(wchar_t));
 	cpst.lpData = (PVOID)savedPath.c_str();
 	DBGW1("beNotified() sending closed message for %s", savedPath.c_str());
 	//DBG1("beNotified() sending closed message for %s", s.c_str());
