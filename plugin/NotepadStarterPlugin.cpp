@@ -107,6 +107,7 @@ void TryInstallNotepadStarter() {
 		KEY_READ,
 		&hKey);
 	std::wstring NotepadPlusPlusExecutable = L"";
+	std::wstring NotepadPlusStarterExecutable = GetEnvironmentVariableValue(L"WinDir") + L"\\NotepadStarter.exe";
 	std::wstring NotepadPlusPlusSelf = GetThisExecutable();
 	std::wstring NotepadStarter;
 	bool hasNpp = false;
@@ -132,7 +133,11 @@ void TryInstallNotepadStarter() {
 		RegCloseKey(hKey);
 	}
 
-	if (!hasNpp || !ExistPath(NotepadPlusPlusExecutable) || NotepadPlusPlusSelf != NotepadPlusPlusExecutable) {
+	if (
+		!hasNpp ||
+		!ExistPath(NotepadPlusPlusExecutable) ||
+		!ExistPath(NotepadPlusStarterExecutable) ||
+		NotepadPlusPlusSelf != NotepadPlusPlusExecutable) {
 #if 0
 		int ret = MessageBoxW(
 			NULL,

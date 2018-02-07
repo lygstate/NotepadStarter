@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin name="NotepadStarterPlugin">
-  <unicodeVersion>2.1.0.0</unicodeVersion>
+  <unicodeVersion>2.3.0.0</unicodeVersion>
   <description>This tool designed as a Notepad++ plugin by [Yonggang Luo](luoyonggang(at)gmail.com), when\nit installed as a Notepad++ plugin or running NotepadStarter.exe in the Notepad++ app\ndirectory, it's will automatically replace the system default notepad.exe application with\nNotepad++ (Without need for removing anything from the windows system.).  It's tested\nunder Windows 7, but Windows XP should also works.</description>
   <author>Yonggang Luo</author>
   <homepage>https://github.com/lygstate/NotepadStarter/</homepage>

@@ -29,13 +29,14 @@ if not exist "%NotepadStarter%" ( goto NoNotepadPlusPlusOrNotepadStarter )
 if not exist "%NotepadPlusPlus%" ( goto NoNotepadPlusPlusOrNotepadStarter )
 
 ::Gain Administrator permission
-set SHOW_SUBWINDOW=0
+set SHOW_SUBWINDOW=1
 call "%~dps0request-admin.bat" "%~dpnxs0" %*
 
-reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f 
-copy /Y %NotepadStarter% "%SystemRoot%\NotepadStarter.exe"
+reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f
+del /F "%WinDir%\NotepadStarter.exe"
+copy /Y "%NotepadStarter%" "%WinDir%\NotepadStarter.exe"
 if defined UseImageFileExecution (
-  reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f /v "Debugger" /t REG_SZ /d "%SystemRoot%\NotepadStarter.exe"
+  reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f /v "Debugger" /t REG_SZ /d "%WinDir%\NotepadStarter.exe"
   goto PreppareRegistry
 )
 
