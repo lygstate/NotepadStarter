@@ -1,7 +1,7 @@
-::通过使用短文件路径，支持放在Unicode路径下。
+::By using short path, to support place in Unicode Path
 @echo off
 
-::获取管理员权限
+::Gain Administrator permission
 set SHOW_SUBWINDOW=0
 call "%~dps0request-admin.bat" "%~dpnxs0" %*
 

@@ -1,4 +1,4 @@
-::通过使用短文件路径，支持放在Unicode路径下。
+::By using short path, to support place in Unicode Path
 @echo on
 echo Args:[%*]
 if not "%1"=="ReplaceSystemNotepad" (
@@ -28,7 +28,7 @@ set "NotepadStarter=%CD%\NotepadStarter.exe"
 if not exist "%NotepadStarter%" ( goto NoNotepadPlusPlusOrNotepadStarter )
 if not exist "%NotepadPlusPlus%" ( goto NoNotepadPlusPlusOrNotepadStarter )
 
-::获取管理员权限
+::Gain Administrator permission
 set SHOW_SUBWINDOW=0
 call "%~dps0request-admin.bat" "%~dpnxs0" %*
 
@@ -48,7 +48,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution 
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f /v "readme" /t REG_SZ /d "call NotepadStarter.exe instead of original notepad.exe! To disable this option just remove notepad.exe entry"
 
 :NoNotepadPlusPlusOrNotepadStarter
-::pause
+pause
 
 goto :eof
 :ReplaceNotepad           -Passing the directory have notepad.exe who will be replaced
@@ -58,7 +58,8 @@ cd /d "%~1"
 if not exist "notepad.exe" (goto CopyNotepad)
 takeown /f notepad.exe
 echo Y | cacls notepad.exe /Grant Administrators:F
-echo N | move /-Y notepad.exe notepad.NotepadStarter.exe
+del /F notepad.NotepadStarter.exe
+rename notepad.exe notepad.NotepadStarter.exe
 :CopyNotepad
 copy /Y "%NotepadStarter%" notepad.exe
 endlocal
