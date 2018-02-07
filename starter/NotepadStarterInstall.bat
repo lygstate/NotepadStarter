@@ -29,7 +29,7 @@ if not exist "%NotepadStarter%" ( goto NoNotepadPlusPlusOrNotepadStarter )
 if not exist "%NotepadPlusPlus%" ( goto NoNotepadPlusPlusOrNotepadStarter )
 
 ::Gain Administrator permission
-set SHOW_SUBWINDOW=1
+set SHOW_SUBWINDOW=0
 call "%~dps0request-admin.bat" "%~dpnxs0" %*
 
 reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f
