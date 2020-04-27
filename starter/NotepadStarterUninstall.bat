@@ -31,13 +31,13 @@ if not exist notepad.NotepadStarter.exe (goto recoverFile)
 if not exist notepad.exe (goto recoverFile)
 
 takeown /f notepad.exe
-echo Y | cacls notepad.exe /Grant Administrators:F
+echo y | cacls notepad.exe /Grant Administrators:F
 
 call :RetrieveFileTime CurrentFileTime notepad.exe
 if "%NotepadStarterTime%" equ "%CurrentFileTime%" (goto recoverFile)
 del /F /Q notepad.NotepadStarter.exe
 :recoverFile
-echo Y | move /-Y notepad.NotepadStarter.exe notepad.exe
+echo y | move /-Y notepad.NotepadStarter.exe notepad.exe
 endlocal
 
 goto :eof

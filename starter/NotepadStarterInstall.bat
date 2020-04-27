@@ -58,7 +58,7 @@ setlocal
 cd /d "%~1"
 if not exist "notepad.exe" (goto CopyNotepad)
 takeown /f notepad.exe
-echo Y | cacls notepad.exe /Grant Administrators:F
+echo y | cacls notepad.exe /Grant Administrators:F
 del /F notepad.NotepadStarter.exe
 rename notepad.exe notepad.NotepadStarter.exe
 :CopyNotepad
