@@ -38,7 +38,7 @@ Comments, issues and contributions can be done at [Github|NotepadStarter](https:
 Downloading the NotepadStarter-major.minor.maintenance.revision.zip from [NotepadStarter releases](https://github.com/lygstate/NotepadStarter/releases)
 
 ### For newest version of notepad++
-Create directory ${Notepad++InstallDir}\plugins\
+Create directory ${Notepad++InstallDir}\plugins\NotepadStarterPlugin
 Extract the content of downloaded zip file into ${Notepad++InstallDir}\plugins\NotepadStarterPlugin, running Notepad++, then it's will prompt a window to installing the NotepadStarter.
 ### For old version of notepad++
 Extract the content of downloaded zip file into ${Notepad++InstallDir}\plugins, running Notepad++, then it's will prompt a window to installing the NotepadStarter.
