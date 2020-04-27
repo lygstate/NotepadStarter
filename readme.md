@@ -36,10 +36,12 @@ Comments, issues and contributions can be done at [Github|NotepadStarter](https:
 
 ## Installation
 Downloading the NotepadStarter-major.minor.maintenance.revision.zip from [NotepadStarter releases](https://github.com/lygstate/NotepadStarter/releases)
-Extract the content into ${Notepad++InstallDir}\plugins\, running Notepad++, then it's will prompt a window how two installing the NotepadStarter.
-There is two mode:
- * `Yes`: Install NotepadStarter as `notepad.exe Image File Execution`
- * `No`: Install NotepadStarter to replace the system notepad.exe completely(backup the original `notepad.exe` as `notepad.NotepadStarter.exe`)
+
+### For newest version of notepad++
+Create directory ${Notepad++InstallDir}\plugins\
+Extract the content of downloaded zip file into ${Notepad++InstallDir}\plugins\NotepadStarterPlugin, running Notepad++, then it's will prompt a window to installing the NotepadStarter.
+### For old version of notepad++
+Extract the content of downloaded zip file into ${Notepad++InstallDir}\plugins, running Notepad++, then it's will prompt a window to installing the NotepadStarter.
 
 ## Uninstallation
- Running the script ${Notepad++InstallDir}\plugins\NotepadStarter\NotepadStarterUninstall.bat
+Running the script ${Notepad++InstallDir}\plugins\NotepadStarter\NotepadStarterUninstall.bat

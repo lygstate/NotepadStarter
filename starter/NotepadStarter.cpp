@@ -400,7 +400,7 @@ int DoCommand(wstring cmd) {
 	wstring executableScript = GetParentDir(GetThisExecutable()) + L"\\";
 	if (cmd == L":install-registry")
 	{
-		executableScript += L"NotepadStarterInstall.bat";
+		executableScript += L"NotepadStarterInstall.bat install";
 	}
 	else if (cmd == L":install-replace")
 	{
@@ -408,7 +408,7 @@ int DoCommand(wstring cmd) {
 	}
 	else if (cmd == L":uninstall")
 	{
-		executableScript += L"NotepadStarterUninstall.bat";
+		executableScript += L"NotepadStarterUninstall.bat uninstall";
 	}
 	else
 	{

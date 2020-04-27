@@ -151,9 +151,18 @@ void TryInstallNotepadStarter() {
 		int ret = IDYES;
 #endif
 		std::wstring installScript = GetParentDir(NotepadPlusPlusSelf) + L"\\plugins\\NotepadStarter\\NotepadStarter.exe";
-		if (!ExistPath(installScript) && hasNppDir && ExistPath(NotepadPlusPlusDir)) {
-			installScript = GetEnvironmentVariableValue(L"AppData") + L"\\notepad++\\plugins\\NotepadStarter\\NotepadStarter.exe";
+		if (!ExistPath(installScript)) {
+			installScript = GetParentDir(NotepadPlusPlusSelf) + L"\\plugins\\NotepadStarterPlugin\\NotepadStarter\\NotepadStarter.exe";
 		}
+		if (hasNppDir && ExistPath(NotepadPlusPlusDir)) {
+			if (!ExistPath(installScript)) {
+				installScript = GetEnvironmentVariableValue(L"AppData") + L"\\notepad++\\plugins\\NotepadStarter\\NotepadStarter.exe";
+			}
+			if (!ExistPath(installScript)) {
+				installScript = GetEnvironmentVariableValue(L"AppData") + L"\\notepad++\\plugins\\NotepadStarterPlugin\\NotepadStarter\\NotepadStarter.exe";
+			}
+		}
+
 		switch (ret) {
 		default:
 		case IDCANCEL:

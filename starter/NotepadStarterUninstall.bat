@@ -5,8 +5,6 @@
 set SHOW_SUBWINDOW=0
 call "%~dps0request-admin.bat" "%~dpnxs0" %*
 
-reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f 
-
 call :RetrieveFileTime NotepadStarterTime "%SystemRoot%\NotepadStarter.exe"
 
 call :RecoverNotepad "%SystemRoot%"
@@ -18,9 +16,19 @@ del /F /Q "%SystemRoot%\NotepadStarter.exe"
 cd /d %~dps0..
 if exist "NotepadStarter\.git" (goto skipGitRepository)
 del /F /Q NotepadStarterPlugin.dll
-rd /s /q NotepadStarter
 :skipGitRepository
-::pause
+
+reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f
+reg delete "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f
+reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f /reg:64
+reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /f /reg:32
+
+if "%1"=="uninstall" goto uninstall_direct
+
+rd /s /q NotepadStarter & pause
+
+:uninstall_direct
+rd /s /q NotepadStarter
 
 goto :eof
 :RecoverNotepad           -Passing the directory have notepad.exe who will be replaced
