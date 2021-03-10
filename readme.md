@@ -44,4 +44,4 @@ Extract the content of downloaded zip file into ${Notepad++InstallDir}\plugins\N
 Extract the content of downloaded zip file into ${Notepad++InstallDir}\plugins, running Notepad++, then it's will prompt a window to installing the NotepadStarter.
 
 ## Uninstallation
-Running the script ${Notepad++InstallDir}\plugins\NotepadStarter\NotepadStarterUninstall.bat
+Running the script ${Notepad++InstallDir}\plugins\NotepadStarterPlugin\NotepadStarter\NotepadStarterUninstall.bat
